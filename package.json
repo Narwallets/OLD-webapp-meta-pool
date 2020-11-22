@@ -1,0 +1,32 @@
+{
+  "name": "dapp-diversifying-staking-pool",
+  "version": "0.1.0",
+  "description": "get SKASH, yield-farm rewards, enjoy immediate unstake",
+  "author": "luciotato <luciotato@gmail.com>",
+  "homepage": "www.narwallets.com",
+  "type": "module",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Narwallets/dapp-diversifying-staking-pool.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "python3 -m http.server",
+    "start": "chrome /DApp"
+  },
+  "keywords": [
+    "NEAR",
+    "Narwallet",
+    "fund",
+    "github",
+    "open source",
+    "gofundme"
+  ],
+  "devDependencies": {
+    "@types/chrome": "0.0.126",
+    "snowpack": "^2.17.0",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {}
+}

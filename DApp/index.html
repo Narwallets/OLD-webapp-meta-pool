@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Diversifying Staking Pool</title>
+    <link rel="stylesheet" href="css/hamb.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <div class="app">
+        
+        <div class="app-header">
+
+            <div class="app-header-contents">
+                <h2>Diversifying Staking Pool</h2>
+            </div>
+            <div class="hamb-space"></div>
+        </div>
+
+        <nav class="hamb">
+            <svg width=24 height=28>
+                <line id="top" x1=0 y1=2 x2=24 y2=2 />
+                <line id="middle" x1=0 y1=12 x2=24 y2=12 />
+                <line id="bottom" x1=0 y1=22 x2=24 y2=22 />
+            </svg>
+        </nav>
+
+        <aside>
+            <div class="logo-128"></div>
+            <nav>
+                <hr>
+                <li id="aside-logout">Logout</li>
+                <hr>
+                <li id="aside-dashboard">Dashboard</li>
+                <hr>
+                <li id="aside-buy-skash">Buy SKASH/Stake</li>
+                <hr>
+                <li id="aside-sell-skash">Sell SKASH/Unstake</li>
+                <hr>
+                <li id="aside-my-account">My Account</li>
+                <hr>
+                <li id="aside-deposit">Deposit</li>
+                <hr>
+                <li id="aside-withdraw">Withdraw</li>
+                <hr>
+                <li id="aside-contact">Contact</li>
+                <hr>
+                <li id="aside-about">About</li>
+                <hr>
+            </nav>
+        </aside>
+
+        <div class="app-contents">
+
+            <!-- Main Page, Dashboard -->
+            <div id="main-page" class="page slide-hide">
+                <h2 class="page-header">Dashboard</h2>
+
+                <div id="dashboard">
+                </div>
+
+                <div id="dashboard-buttons" class="footer button-group">
+                    <button id="enter-my-account" class="button btn-primary">
+                        My Account
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Template -->
+            <div id="dashboard-template" class="hidden label-value-content">
+                <div class="label-value">
+                    <label>Total Funds</label>
+                    <div class="balance">{total}</div>
+                </div>
+                <div class="label-value">
+                    <label>Historic Rewards</label>
+                    <div class="balance">{historicRewards}</div>
+                </div>
+                <div class="label-value">
+                    <label>SKASHs/Staked</label>
+                    <div class="balance">{staked}</div>
+                </div>
+                <div class="label-value">
+                    <label>Last Rewards</label>
+                    <div class="balance">{lastRewards}</div>
+                </div>
+                <div class="label-value">
+                    <label>SKASH sell market</label>
+                    <div class="balance">{skashSellMarket}</div>
+                </div>
+                <div class="label-value">
+                    <label>SKASH buy market</label>
+                    <div class="balance">{skashBuyMarket}</div>
+                </div>
+                <div class="label-value">
+                    <label>Time to rewards distribution</label>
+                    <div class="timespan">{timeToRewardsString}</div>
+                </div>
+                <div class="label-value">
+                    <label>Expected Rewards</label>
+                    <div class="balance">{expectedRewards}</div>
+                </div>
+                <div class="label-value">
+                    <label>Number of pools</label>
+                    <div class="number">{numberOfPools}</div>
+                </div>
+                <div class="label-value">
+                    <label>Average Fee</label>
+                    <div class="pct">{averageFee}</div>
+                </div>
+            </div>
+
+            <!-- WELCOME New user, onboarding-->
+            <div id="welcome-new-user-page" class="page slide-hide">
+                <div class="contents-body">
+                    <h1>Diverifying Staking Pool</h1>
+                    <h2>The future is NEAR</h2>
+                    <h2>Yield Farming for Staking Rewards is Near</h2>
+                    <div class="select-action-button-box">
+                        <p>
+                            <b>Step one:</b><br>Enter your NEAR account to login
+                        </p>
+                        <button id="welcome-create-pass" class="btn-primary">Login</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New User create pass-->
+            <div id="create-user" class="page slide-hide">
+                <h1>Login</h1>
+                <form class="create-pass-form">
+                    <div class="form-field-label">
+                        <label for="near-issue">Your near issue</label>
+                        <div class="form-control">
+                            <input type="text" tabindex="0" autocomplete="your near issue" id="near-issue" />
+                        </div>
+                    </div>
+                    <div class="checkbox-container">
+                        <input id="agree-check" type="checkbox" bind:checked aria-checked="false"
+                            aria-labelledby="checkbox-label" />
+                        <label for="checkbox" class="checkbox-label">
+                            I have read and agree to the
+                            <a href=# id="open-terms-of-use">Terms of
+                                Use
+                            </a>
+                        </label>
+                    </div>
+                    <div class="center">
+                        <button class="btn-primary" id="login">Create
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Unlocked, SECURITY OPTIONS -->
+            <div id="security-options" class="page slide-hide">
+                <h2>Security Options</h2>
+                <div id="list" class="options-list">
+                    <div class="flex-row">
+                        <input type="checkbox" id="advanced-mode" value="">
+                        <label for="advanced-mode">Advanced User</label>
+                        <div class="flex-padding" style="flex: 1 0 auto;"></div>
+                    </div>
+                    <div class="explanation">Show advanced options as: Show public key, Add public key to a Lockup
+                        contract and Delete Issue</div>
+                    <div class="flex-row">
+                        <label for="auto-unlock-seconds" style="
+                                text-align: right;
+                                padding-right: 10px;
+                                flex: 0 1 25%;">Auto-Lock (seconds): </label>
+                        <input id="auto-unlock-seconds" type="number">
+                        <div class="flex-padding" style="flex: 1 0 auto;"></div>
+                    </div>
+                    <div class="explanation">The wallet will auto-lock after x seconds of you closing the popup
+                        extension</div>
+                    <div class="flex-row">
+                        <button id="save-settings" class="small">Save Settings</button>
+                        <button id="cancel-security-settings" class="small btn-cancel">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Account Page -->
+            <div id="my-account" class="account-selected page slide-hide">
+                <header class="back-link">Back to Dashboard</header>
+                <div id="my-account-info" class="my-account-info">
+                </div>
+
+                <!-- Template -->
+                <div id="my-account-template" class="label-value-content hidden">
+                    <div class="label-value">
+                        <label>Account</label>
+                        <div class="account">{nearAccount}</div>
+                    </div>
+                    <div id="available-balance-line" class="label-value">
+                        <label>Available</label>
+                        <div class="balance">{available}</div>
+                    </div>
+                    <div class="label-value">
+                        <label>SKASHs/Staked</label>
+                        <div class="balance">{staked}</div>
+                    </div>
+                    <div class="label-value">
+                            <label>Rewards</label>
+                        <div class="balance">{rewards}</div>
+                    </div>
+                    <div class="label-value">
+                        <label>Historic Rewards</label>
+                        <div class="balance">{historicRewards}</div>
+                    </div>
+                    <div class="label-value">
+                        <label>Buy SKASH Orders</label>
+                        <div class="balance">{buyOrders}</div>
+                    </div>
+                    <div class="label-value">
+                        <label>Sell SKASH Orders</label>
+                        <div class="balance">{sellOrders}</div>
+                    </div>
+                    <div class="label-value">
+                        <label>Unstaked</label>
+                        <div class="balance">{unstaked}</div>
+                    </div>
+                    <div id="wait-to-withdraw" class="label-value hidden">
+                        <label>Wait to withdraw</label>
+                        <div class="timespan">{remainingTimeString}</div>
+                    </div>
+                </div>
+
+                <div class="footer">
+
+                    <!-- Buttons -->
+                    <div id="account-selected-buttons" class="subpage">
+                        <div class="button-group top-line">
+                            <button id="deposit">Deposit</button>
+                            <button id="withdraw">Withdraw</button>
+                        </div>
+                        <div class="button-group">
+                            <button id="stake">Buy SKASH/Stake</button>
+                            <button id="unstake">Sell SKASH/Unstake</button>
+                        </div>
+                        <div class="button-group">
+                            <button id="close-account">Close Account</button>
+                        </div>
+                    </div>
+
+
+                    <!-- SUBPAGES -->
+
+                    <!-- Deposit NEAR -->
+                    <div id="deposit-subpage" class="subpage hidden">
+                        <h1>Deposit NEAR</h1>
+                        <div class="subtitle">
+                            <h3 class="success">You need to deposit some NEAR in this smart contract to be able to buy
+                                SKASH/Stake.
+                                Your funds are secure and available. You can withdraw your available NEARS at any time.
+                            </h3>
+                        </div>
+                        <form class="deposit-form">
+                            <div class="form-field-label">
+                                <label for="deposit-amount">
+                                    Amount in NEAR to deposit
+                                </label>
+                                <div class="form-control">
+                                    <input id="deposit-amount" type="numeric">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- WITHDRAW NEAR -->
+                    <div id="withdraw-subpage" class="subpage hidden">
+                        <h1>Withdraw NEAR</h1>
+                        <div class="subtitle">
+                            <h3 class="success">You can withdraw from your available balance plus rewards.</h3>
+                        </div>
+                        <form class="withdraw-form">
+                            <div class="form-field-label">
+                                <label for="withdraw-amount">
+                                    Amount in NEAR to withdraw
+                                </label>
+                                <div class="form-control">
+                                    <input id="withdraw-amount" type="numeric">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- subpage BUY SKASH/STAKE -->
+                    <div id="buy-skash" class="subpage hidden">
+                        <h1>Buy SKASH/Stake</h1>
+                        <form>
+                            <div class="form-field-label">
+                                <label for="buy-amount">
+                                    Amount in NEAR
+                                </label>
+                                <div class="form-control">
+                                    <input id="buy-amount" type="numeric">
+                                </div>
+                            </div>
+                            <div class="form-field-label">
+                                <label for="min-discount-requested-slider">Min Discount Requested <span
+                                        class="important-pct" id="min-discount-requested"></span></label>
+                                <input type="range" id="min-discount-requested-slider" min="1" max="24">
+                                <!--1=0.5 and then up to 12% in 0.5 increments-->
+                            </div>
+                            <div class="form-field-label">
+                                <label for="buy-order-valid-for-slider">Order valid for <span class="important-timespan"
+                                        id="buy-order-valid-for"></span></label>
+                                <input type="range" id="buy-order-valid-for-slider" min="1" max="24">
+                                <!--1=30min and then up to 12hs/infinite 30min increments-->
+                            </div>
+
+                            <!-- BUY: SHOW RESULT-->
+                            <div id="buy-results" class="hidden flex-labeled-row">
+                                <label>Msg</label>
+                                <div id="buy-result-message"></div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- subpage SELL SKASH/STAKE -->
+                    <div id="sell-skash" class="subpage hidden">
+                        <h1>Sell SKASH/Unstake</h1>
+                        <form>
+                            <div class="form-field-label">
+                                <label for="sell-amount">
+                                    SKASH Amount to sell
+                                </label>
+                                <div class="form-control">
+                                    <input id="sell-amount" type="numeric">
+                                </div>
+                            </div>
+                            <div class="form-field-label">
+                                <label for="min-discount-accepted-slider">Max Discount accepted <span
+                                        class="important-pct" id="min-discount-accepted"></span></label>
+                                <input type="range" id="min-discount-accepted-slider" min="1" max="24">
+                                <!--1=0.5 and then up to 12% in 0.5 increments-->
+                            </div>
+                            <div class="form-field-label">
+                                <label for="sell-order-valid-for-slider">Order valid for <span
+                                        class="important-timespan" id="sell-order-valid-for"></span></label>
+                                <input type="range" id="sell-order-valid-for-slider" min="1" max="24">
+                                <!--1=30min and then up to 12hs/infinite 30min increments-->
+                            </div>
+
+                            <!-- SELL: SHOW RESULT-->
+                            <div id="sell-results" class="hidden flex-labeled-row">
+                                <label>Msg</label>
+                                <div id="sell-result-message"></div>
+                            </div>
+                        </form>
+                    </div>
+
+
+
+
+                    <!-- OK CANCEL buttons common to all subpages -->
+                    <div class="button-group top-line ok-cancel hidden">
+                        <button id="account-selected-action-confirm" class="button btn-primary">
+                            OK
+                        </button>
+                        <button id="account-selected-action-cancel" class="button btn-cancel">
+                            Cancel
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div> <!-- end app-contents -->
+    </div> <!-- end app-->
+
+
+    <!-- -->
+    <div id="err-div"></div>
+    <!-- -->
+    <div id="wait">
+        <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <script src="bundled-libs.js"></script>
+    <script type="module" src="dist/index.js"></script>
+
+</body>
+
+</html>
