@@ -11,9 +11,8 @@
     "url": "git+https://github.com/Narwallets/dapp-diversifying-staking-pool.git"
   },
   "scripts": {
-    "build": "tsc",
-    "test": "python3 -m http.server",
-    "start": "chrome /DApp"
+    "build": "tsc -w",
+    "serve": "python3 -m http.server"
   },
   "keywords": [
     "NEAR",
