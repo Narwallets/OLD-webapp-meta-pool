@@ -65,45 +65,52 @@ export class Transfer extends TransactionItem{
 //-- WALLET SINGLETON --
 //----------------------
 
-let _isOpen: boolean =false;
+let _isConnected: boolean =false;
 let _accountId: string;
 
 export let wallet = {
     
     get accountId():string{
-        return "";
+        return _accountId;
     },
 
 
     /**
-     * open:ASYNC: Connects to the user chrome-extension-wallet accountId or THROWS
+     * connect:ASYNC: Connects to Narwallets chrome-extension-wallet or THROWS
      */
-    open: async function(): Promise<any> {
+    connect: async function(): Promise<any> {
         
-        _isOpen = false;
+        _isConnected = false;
 
         if (develMode.enabled){
-            _isOpen = true;
+            _isConnected = true;
             _accountId= develMode.accountId;
             return;
         }
 
         //here try to connect
+        throw Error("ERR: API not availabe yet")
+
         throw Error("ERR: Narwallets is not installed or the user rejected the connection")
     },
 
-    close: function(){
-        _isOpen = false;
+    disconnect: function(){
+        _isConnected = false;
     },
 
-    get isOpen() {return _isOpen},
+    get isConnected() {return _isConnected},
+    
+    /**
+     * isConnected or trhrows "wallet not connected"
+     */
+    checkConnected() {if (!_isConnected) throw Error("wallet is not connected")},
 
     /**
      * ASYNC. Applies the transaction in the NEAR blockchain
      */
     apply: async function (tx:Transaction):Promise<any>{
 
-        if (!_isOpen) throw Error("wallet is not opened")
+        wallet.checkConnected()
         
         if (develMode.enabled){
             const actions: TX.Action[]=[];
@@ -115,9 +122,11 @@ export let wallet = {
                     actions.push(TX.transfer(near.ONE_NEAR.muln(item.attachedNEAR)))
                 }
             }
-       
             return near.broadcast_tx_commit_actions(actions, this.accountId, tx.receiver, develMode.privateKey)
         }
+
+        //normal mode
+        throw Error("ERR: API not availabe yet")
     },
 
     /**
@@ -130,10 +139,10 @@ export let wallet = {
     /**
      * A single contract "payable" fn call
      */
-    call: async function (contract:string, method:string, args:Record<string,any>, TGas:number, attachedNEAR:number){
+    call: async function (contract:string, method:string, args:Record<string,any>, TGas:number, attachedNEAR:number):Promise<any>{
         const tx=new Transaction(contract)
         tx.addItem(new FunctionCall(method,args,TGas,attachedNEAR))
-        this.apply(tx)
+        return this.apply(tx)
     }
 
 }

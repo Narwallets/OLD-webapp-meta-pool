@@ -265,7 +265,7 @@
                                     Amount in NEAR to deposit
                                 </label>
                                 <div class="form-control">
-                                    <input id="deposit-amount" type="numeric">
+                                    <input id="deposit-amount" type="number">
                                 </div>
                             </div>
                         </form>
@@ -275,15 +275,15 @@
                     <div id="withdraw-subpage" class="subpage hidden">
                         <h1>Withdraw NEAR</h1>
                         <div class="subtitle">
-                            <h3 class="success">You can withdraw from your available balance plus rewards.</h3>
+                            <h3 class="success">You can withdraw from your available balance.</h3>
                         </div>
                         <form class="withdraw-form">
                             <div class="form-field-label">
                                 <label for="withdraw-amount">
-                                    Amount in NEAR to withdraw
+                                    Amount in NEAR to withdraw (Max <span id="max-withdraw"></span>)
                                 </label>
                                 <div class="form-control">
-                                    <input id="withdraw-amount" type="numeric">
+                                    <input id="withdraw-amount" type="number">
                                 </div>
                             </div>
                         </form>
@@ -298,7 +298,7 @@
                                     Amount in NEAR
                                 </label>
                                 <div class="form-control">
-                                    <input id="buy-amount" type="numeric">
+                                    <input id="buy-amount" type="number">
                                 </div>
                             </div>
                             <div class="form-field-label">
@@ -331,7 +331,7 @@
                                     SKASH Amount to sell
                                 </label>
                                 <div class="form-control">
-                                    <input id="sell-amount" type="numeric">
+                                    <input id="sell-amount" type="number">
                                 </div>
                             </div>
                             <div class="form-field-label">

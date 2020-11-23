@@ -115,10 +115,10 @@ function enableOKCancel() {
     cancelBtn.disabled = false
 }
 
-function fullAccessSubPage(subPageId:string, OKHandler:ClickHandler) {
+function walletConnectedSubPage(subPageId:string, OKHandler:ClickHandler) {
     try {
         d.hideErr()
-        //checkAccountAccess()
+        wallet.checkConnected()
         d.showSubPage(subPageId)
         showOKCancel(OKHandler)
     }
@@ -130,22 +130,15 @@ function fullAccessSubPage(subPageId:string, OKHandler:ClickHandler) {
 
 
 function withdrawClicked() {
-    d.showSubPage('account-selected-receive')
-    d.byId("account-selected-receive-name").innerText = selectedAccountData.nearAccount
-    showOKCancel(showButtons)
+    walletConnectedSubPage('withdraw-subpage',performWithdraw)
+    d.byId("max-withdraw").innerText = c.toStringDec(selectedAccountData.available)
 }
-
 
 
 //----------------------
 function depositClicked() {
-    try {
-        fullAccessSubPage("deposit-subpage", performDeposit)
-    } catch (ex) {
-        d.showErr(ex.message)
-    }
+    walletConnectedSubPage('deposit-subpage',performDeposit)
 }
-
 
 
 //----------------------
@@ -175,7 +168,7 @@ function stakeClicked() {
 
         if (amountToStake < 0) amountToStake=0;
 
-        fullAccessSubPage("account-selected-stake", performer)
+        walletConnectedSubPage("account-selected-stake", performer)
         //d.inputById("stake-with-staking-pool").value = selectedAccountData.accountInfo.stakingPool || ""
         d.byId("max-stake-amount").innerText = c.toStringDec(amountToStake)
         stakeAmountBox.value = c.toStringDec(amountToStake)
@@ -351,7 +344,7 @@ async function unstakeClicked() {
             amountBox.disabled = false
             amountBox.classList.remove("bg-lightblue")
         }
-        fullAccessSubPage("account-selected-unstake", performer)
+        walletConnectedSubPage("account-selected-unstake", performer)
         disableOKCancel()
 
         //---refresh first
@@ -530,6 +523,41 @@ async function performDeposit() {
         //global.state.transactions[Network.current].push(transactionInfo)
 
         d.showSuccess("Success: " + wallet.accountId + " deposited " + c.toStringDec(amountToSend) + "\u{24c3}")
+
+        //internalReflectTransfer(selectedAccountData.nearAccount, toAccName, amountToSend)
+
+    }
+    catch (ex) {
+        d.showErr(ex.message)
+    }
+    finally {
+        d.hideWait()
+        enableOKCancel()
+    }
+
+}
+
+async function performWithdraw() {
+    try {
+        //if (!selectedAccountData.accountInfo.privateKey) throw Error("Account is read-only")
+        const amount = d.getNumber("#withdraw-amount")
+        
+        if (!d.isPositive(amount)) throw Error("Amount should be > 0");
+        if (amount>selectedAccountData.available) throw Error("max amount is "+c.toStringDec(selectedAccountData.available));
+
+        disableOKCancel()
+        d.showWait()
+
+        await wallet.call(global.DiversifyingContractAccount,"withdraw",{},25,amount)
+        //await near.send(selectedAccountData.nearAccount, toAccName, amountToSend, privateKey)
+
+        showButtons()
+
+        //TODO transaction history per network
+        //const transactionInfo={sender:sender, action:"transferred", amount:amountToSend, receiver:toAccName}
+        //global.state.transactions[Network.current].push(transactionInfo)
+
+        d.showSuccess("Success: " + wallet.accountId + " withdrew " + c.toStringDec(amount) + "\u{24c3}")
 
         //internalReflectTransfer(selectedAccountData.nearAccount, toAccName, amountToSend)
 

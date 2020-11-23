@@ -2,10 +2,10 @@ import * as d from "../util/document.js"
 import * as c from "../util/conversions.js"
 import * as global from "../data/global.js"
 
-import { Account, ExtendedAccountData} from "../data/Account.js"
+import { Account, ExtendedAccountData } from "../data/Account.js"
 import { show as MyAccountPage_show } from "./my-account.js"
 
-import * as Wallet from "../wallet-api/wallet.js"
+import { wallet } from "../wallet-api/wallet.js"
 
 //--------------------------
 function init() {
@@ -16,10 +16,10 @@ function init() {
 export function show() {
 
   init()
-  
+
   d.hideErr()
 
-  let dashboardInfo={
+  let dashboardInfo = {
     total: 10000000,
     historicRewards: 145232.23,
     staked: 9432545,
@@ -34,9 +34,9 @@ export function show() {
   //show dashboard info
   d.applyTemplate("dashboard", "dashboard-template", dashboardInfo)
 
-  document.querySelectorAll("#dashboard .number").forEach(el=>{
-    if (el instanceof HTMLDivElement){
-      el.innerText = el.innerText.replace(".00","")
+  document.querySelectorAll("#dashboard .number").forEach(el => {
+    if (el instanceof HTMLDivElement) {
+      el.innerText = el.innerText.replace(".00", "")
     }
   })
   d.showPage("main-page")
@@ -46,7 +46,15 @@ export function show() {
 //---------------------------------------------------
 //-- account item clicked => account selected Page --
 //---------------------------------------------------
-function myAccountClicked(ev:Event) {
-  MyAccountPage_show()
+async function myAccountClicked(ev: Event) {
+  try {
+    if (!wallet.isConnected) {
+      await wallet.connect();
+    }
+    MyAccountPage_show()
+  }
+  catch (ex) {
+    d.showErr(ex.message);
+  }
 }
 
