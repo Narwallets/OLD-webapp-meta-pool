@@ -26,6 +26,7 @@ export function formatJSONErr(obj: any): any {
     let text = JSON.stringify(obj)
     text = text.replace(/{/g, " ")
     text = text.replace(/}/g, " ")
+    text = text.replace(/\\"/g, "")
     text = text.replace(/"/g, "")
 
     //---------
@@ -97,7 +98,7 @@ export async function jsonRpcInternal(payload: Record<string, any>): Promise<any
         return response.result;
     }
     catch (ex) {
-        throw new Error("Network Err: " + ex.message)
+        throw new Error(ex.message)
     }
 }
     // if (!response.ok) {

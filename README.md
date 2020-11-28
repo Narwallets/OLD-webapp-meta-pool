@@ -21,11 +21,11 @@
 
 ## Dev Flow (v0.1)
 * `npm run build` in one terminal to start `tsc -w` (continuous typescript compilation)
-* `npm run serve` to run a simple web server `python3 -m http.server`
+* `npm run serve` in another terminal to run a simple web server `python3 -m http.server`
 * With chrome navigate to: http://localhost:8000/DApp/
 * Chrome Dev Tools: Map folder to /repos/diversifying-staking-pool
 * Use VSCode as the main IDE - Ctrl-Shift-B to build with typescript
-* Use Chrome Dev Tools as an quick-and-dirty IDE with Edit & Continue
+* Use Chrome Dev Tools as a quick-and-dirty IDE with Edit & Continue
 
 ## Low-level Technical debt
 

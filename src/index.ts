@@ -1,7 +1,9 @@
 import * as d from "./util/document.js"
-import * as global from "./data/global.js"
+
 import { recoverOptions } from "./data/options.js"
 import * as Main from "./pages/main.js"
+
+import { wallet } from "./wallet-api/wallet.js"
 
 import { isValidEmail } from "./util/email.js"
 
@@ -58,67 +60,17 @@ function welcomeCreatePassClicked() {
   d.showPage(CREATE_USER)
 }
 
-async function unlockClicked(ev :Event) {
-
-  const emailEl = d.inputById("unlock-email")
-  const passEl = d.inputById("unlock-pass")
-
-  const email = emailEl.value
-  if (!isValidEmail(email)) {
-    d.showErr("Invalid email");
-    return;
-  }
-
-  //if (!global.State.usersList.includes( email)){
-  //  d.showErr("User already exists");
-  //  return;
-  //}
-
-  const password = passEl.value;
-  passEl.value = ""
-
-  try {
-    await global.unlockSecureState(email, password)
-    Main.show()
-    if (global.getNetworkAccountsCount() == 0) {
-      d.showPage(IMPORT_OR_CREATE); //auto-add account after unlock
-    }
-    else {
-      tryReposition(); //try reposition
-    }
-  }
-  catch (ex) {
-    d.showErr(ex.message);
-  }
-
-}
 
 function hambClicked() {
   hamb.toggleClass("open")
   aside.toggleClass("open")
 }
 
-function asideLock() {
-  global.lock()
-  hambClicked();
-  d.showPage(UNLOCK)
-  d.inputById("unlock-email").value = global.State.currentUser;
-
-}
 function asideAccounts() {
   hambClicked();
   Main.show();
 }
 
-function asideIsUnlocked() {
-  hambClicked();
-  if (!global.unlocked) {
-    d.showPage(UNLOCK)
-    d.showErr("You need to unlock the wallet first")
-    return false;
-  }
-  return true;
-}
 
 function securityOptions() {
 
@@ -128,8 +80,6 @@ function securityOptions() {
   d.qs("#moreless").innerText = "More..."
 
   d.showPage("security-options")
-  d.inputById("auto-unlock-seconds").value = global.getAutoUnlockSeconds().toString()
-  d.inputById("advanced-mode").checked = global.SecureState.advancedMode ? true : false;
   d.onClickId("save-settings", saveSecurityOptions)
   d.onClickId("cancel-security-settings", Main.show)
 }
@@ -139,13 +89,13 @@ function saveSecurityOptions(ev:Event) {
     ev.preventDefault()
 
     const checkElem = document.getElementById("advanced-mode") as HTMLInputElement
-    global.SecureState.advancedMode = checkElem.checked
+
 
     const aulSecs = Number(d.inputById("auto-unlock-seconds").value)
     if (isNaN(aulSecs)) throw Error("Invalid auto unlock seconds")
-    global.SecureState.autoUnlockSeconds = aulSecs
 
-    global.saveSecureState()
+
+
     Main.show()
     d.showSuccess("Options saved")
   }
@@ -154,29 +104,10 @@ function saveSecurityOptions(ev:Event) {
   }
 }
 
-function asideOptions() {
-  if (asideIsUnlocked()) {
-    securityOptions()
-  }
-  // chrome.windows.create({
-  //     url: chrome.runtime.getURL("options/options.html")
-  // });
-}
 
 function asideCreateUserClicked() {
   hambClicked();
   d.showPage(WELCOME_NEW_USER_PAGE)
-}
-function asideAddAccount() {
-  if (asideIsUnlocked()) {
-    d.showPage(IMPORT_OR_CREATE)
-  }
-}
-
-function asideChangePassword() {
-  if (asideIsUnlocked()) {
-    d.showPage("change-password")
-  }
 }
 
 function addAccountClicked() {
@@ -198,10 +129,31 @@ async function tryReposition() {
   }
 }
 
+function connectionInfoClicked(){
+  const div = d.byId("connection-info")
+  if (!wallet.isConnected) wallet.connectionHelp()
+}
+
+function walletConnected(ev:CustomEvent){
+  const div = d.byId("connection-info")
+  div.innerText = "Connected: " + ev.detail.data.accountId;
+  div.classList.add("connected")
+
+}
+function walletDisconnected(ev:CustomEvent){
+  const div = d.byId("connection-info")
+  div.innerText = "Not connected";
+  div.classList.remove("connected")
+  d.showSuccess("wallet disconnected")
+}
+
 // ---------------------
 // DOM Loaded - START
 // ---------------------
 async function onLoad() {
+
+  //TESTING MODE 
+  wallet.network ="testnet"
 
   hamb.onClick(hambClicked)
 
@@ -210,6 +162,11 @@ async function onLoad() {
     const errDiv = d.byId("err-div")
     while (errDiv.firstChild) errDiv.firstChild.remove()
   });
+
+  d.onClickId("connection-info", connectionInfoClicked);
+
+  wallet.onConnect(walletConnected)
+  wallet.onDisconnect(walletDisconnected)
 
 
   //d.onClickId(UNLOCK, unlockClicked);
@@ -271,26 +228,6 @@ async function onLoad() {
   finally {
   }
   */
-}
-
-async function tryAutoUnlock(unlockSHA:string) :Promise<boolean> {
-  if (unlockSHA) {
-    //auto-unlock is enabled
-    //try unlocking
-    try {
-      await global.unlockSecureStateSHA(global.State.currentUser, unlockSHA);
-      //if unlock succeeded
-      global.saveOnUnload.unlockSHA = unlockSHA;
-      Main.show(); //show acc list
-      return true;
-    }
-    catch (ex) {
-      //invalid pass-SHA or other error
-      d.showErr(ex.message);
-      return false;
-    }
-  }
-  return false;
 }
 
 document.addEventListener('DOMContentLoaded', onLoad);

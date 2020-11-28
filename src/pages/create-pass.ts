@@ -1,5 +1,5 @@
 import * as d from "../util/document.js"
-import * as global from "../data/global.js"
+
 import { isValidEmail } from "../util/email.js"
 
 const EMAIL = "email"
@@ -37,23 +37,10 @@ function createClicked(ev :Event) {
   else if (!agree.checked) {
     err = "Please agree to the Terms of Use"
   }
-  else if (global.State.usersList.includes(email)){
-    err ="User already exists"
-  }
   if (err) {
     d.showErr(err);
     return;
   }
-
-  global.lock() //log out current user
-
-  //Create SecureState store hashedPass
-  global.State.currentUser=email;
-  global.createSecureState(password);
-
-  //save new user in usersList
-  global.State.usersList.push(email);
-  global.saveState()
 
   d.showPage(IMPORT_OR_CREATE);
 

@@ -16,6 +16,7 @@
 
             <div class="app-header-contents">
                 <h2>Diversifying Staking Pool</h2>
+                <span id="connection-info" class="info-div">Not Connected</span>
             </div>
             <div class="hamb-space"></div>
         </div>
@@ -81,7 +82,7 @@
                 </div>
                 <div class="label-value">
                     <label>SKASHs/Staked</label>
-                    <div class="balance">{staked}</div>
+                    <div class="balance">{skash}</div>
                 </div>
                 <div class="label-value">
                     <label>Last Rewards</label>
@@ -202,7 +203,7 @@
                     </div>
                     <div class="label-value">
                         <label>SKASHs/Staked</label>
-                        <div class="balance">{staked}</div>
+                        <div class="balance">{skash}</div>
                     </div>
                     <div class="label-value">
                             <label>Rewards</label>
@@ -234,7 +235,7 @@
 
                     <!-- Buttons -->
                     <div id="account-selected-buttons" class="subpage">
-                        <div class="button-group top-line">
+                        <div class="button-group no-top-line">
                             <button id="deposit">Deposit</button>
                             <button id="withdraw">Withdraw</button>
                         </div>
@@ -359,7 +360,7 @@
 
 
                     <!-- OK CANCEL buttons common to all subpages -->
-                    <div class="button-group top-line ok-cancel hidden">
+                    <div class="button-group ok-cancel hidden">
                         <button id="account-selected-action-confirm" class="button btn-primary">
                             OK
                         </button>

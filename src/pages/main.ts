@@ -1,8 +1,8 @@
 import * as d from "../util/document.js"
 import * as c from "../util/conversions.js"
-import * as global from "../data/global.js"
 
-import { Account, ExtendedAccountData } from "../data/Account.js"
+
+import { ExtendedAccountData } from "../data/ExtendedAccount.js"
 import { show as MyAccountPage_show } from "./my-account.js"
 
 import { wallet } from "../wallet-api/wallet.js"
@@ -22,7 +22,7 @@ export function show() {
   let dashboardInfo = {
     total: 10000000,
     historicRewards: 145232.23,
-    staked: 9432545,
+    skash: 9432545,
     lastRewards: 12663,
     skashSellMarket: 432553,
     skashBuyMarket: 275424,
@@ -48,9 +48,7 @@ export function show() {
 //---------------------------------------------------
 async function myAccountClicked(ev: Event) {
   try {
-    if (!wallet.isConnected) {
-      await wallet.connect();
-    }
+    wallet.checkConnected()
     MyAccountPage_show()
   }
   catch (ex) {
