@@ -12,7 +12,7 @@ import { localStorageSet } from "../data/util.js"
 import * as Main from "./main.js"
 
 import type { AnyElement, ClickHandler } from "../util/document.js"
-import { CONTRACT_ACCOUNT, divPool } from "../contracts/div-pool.js"
+import { CONTRACT_ACCOUNT, divPool, NETWORK } from "../contracts/div-pool.js"
 
 //-----------------
 // page init
@@ -521,19 +521,15 @@ async function performDeposit() {
         if (!d.isPositive(nearsToDeposit)) throw Error("Amount should be > 0");
 
         disableOKCancel()
-        d.showWait()
+        
+        const timeoutSecs=(NETWORK=="testnet"?20:300);
+        d.showWait(timeoutSecs) //5 min timeout, give the user time to decide
 
         await divPool.deposit(wallet,nearsToDeposit)
 
         showButtons()
 
-        //TODO transaction history per network
-        //const transactionInfo={sender:sender, action:"transferred", amount:amountToSend, receiver:toAccName}
-        //global.state.transactions[Network.current].push(transactionInfo)
-
         d.showSuccess("Success: " + wallet.accountId + " deposited " + c.toStringDec(nearsToDeposit) + "\u{24c3}")
-
-        //internalReflectTransfer(selectedAccountData.nearAccount, toAccName, amountToSend)
 
     }
     catch (ex) {
@@ -558,17 +554,10 @@ async function performWithdraw() {
         d.showWait()
 
         await wallet.call(CONTRACT_ACCOUNT, "withdraw", {}, 25, amount)
-        //await near.send(selectedAccountData.nearAccount, toAccName, amountToSend, privateKey)
 
         showButtons()
 
-        //TODO transaction history per network
-        //const transactionInfo={sender:sender, action:"transferred", amount:amountToSend, receiver:toAccName}
-        //global.state.transactions[Network.current].push(transactionInfo)
-
         d.showSuccess("Success: " + wallet.accountId + " withdrew " + c.toStringDec(amount) + "\u{24c3}")
-
-        //internalReflectTransfer(selectedAccountData.nearAccount, toAccName, amountToSend)
 
     }
     catch (ex) {

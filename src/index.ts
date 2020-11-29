@@ -138,7 +138,7 @@ function walletConnected(ev:CustomEvent){
   const div = d.byId("connection-info")
   div.innerText = "Connected: " + ev.detail.data.accountId;
   div.classList.add("connected")
-
+  d.showSuccess("wallet connected")
 }
 function walletDisconnected(ev:CustomEvent){
   const div = d.byId("connection-info")

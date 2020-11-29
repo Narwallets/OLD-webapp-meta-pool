@@ -200,14 +200,14 @@ export function showMsg(msg:string, extraClass:string, showMs?:number) :HTMLElem
 // requires div id="wait" and class .show
 //------------------------------------------------------------
 let hideTO:any;
-export function showWait() {
+export function showWait(timeoutSecs:number=30) {
   const waitDiv = byId(WAIT)
   if (!waitDiv) {
     console.error("MISSING div id=wait ON THIS PAGE")
     return;
   }
   waitDiv.classList.add("show");
-  hideTO = setTimeout(hideWait, 30000);//in case there's a programming error, hideWait is called automatically after 30 sec
+  hideTO = setTimeout(hideWait, timeoutSecs*1000);//in case there's a programming error, hideWait is called automatically after 30 sec
 }
 
 export function hideWait() {

@@ -45,6 +45,7 @@ let requestId=0; //incremental request-id
 //-- msg path is ext-> content-script-> here-> dispatchEvent("wallet-connected"|"wallet-disconnected"|"wallet-event")
 //-- process by raising 'wallet-event'  
 //----------------------------------------
+console.log("wallet.ts addEventListener(message)")
 window.addEventListener("message", 
     function(event) {
         console.log("wallet-ts messagelistener",event.data.dest, event.data);
