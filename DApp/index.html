@@ -57,13 +57,29 @@
         <div class="app-contents">
 
             <!-- Main Page, Dashboard -->
-            <div id="main-page" class="page slide-hide">
+            <div id="initial-page" class="page slide-hide">
+                <h2 class="page-header">Welcome!</h2>
+
+                <h3>Please connect a wallet to interact with this DApp</h3>
+
+                <div id="main-buttons" class="footer button-group">
+                    <button id="how-to-connect-a-wallet" class="button btn-primary">
+                        How to connect a wallet
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboard-page" class="page slide-hide">
                 <h2 class="page-header">Dashboard</h2>
 
                 <div id="dashboard">
                 </div>
 
                 <div id="dashboard-buttons" class="footer button-group">
+                    <button id="refresh-dashboard" class="button btn-primary">
+                        Refresh Dashboard
+                    </button>
                     <button id="enter-my-account" class="button btn-primary">
                         My Account
                     </button>
@@ -85,10 +101,6 @@
                     <div class="balance">{skash}</div>
                 </div>
                 <div class="label-value">
-                    <label>Last Rewards</label>
-                    <div class="balance">{lastRewards}</div>
-                </div>
-                <div class="label-value">
                     <label>SKASH sell market</label>
                     <div class="balance">{skashSellMarket}</div>
                 </div>
@@ -101,17 +113,15 @@
                     <div class="timespan">{timeToRewardsString}</div>
                 </div>
                 <div class="label-value">
-                    <label>Expected Rewards</label>
-                    <div class="balance">{expectedRewards}</div>
-                </div>
-                <div class="label-value">
                     <label>Number of pools</label>
                     <div class="number">{numberOfPools}</div>
                 </div>
+                <!--
                 <div class="label-value">
                     <label>Average Fee</label>
                     <div class="pct">{averageFee}</div>
                 </div>
+                -->
             </div>
 
             <!-- WELCOME New user, onboarding-->
@@ -132,7 +142,7 @@
             <!-- New User create pass-->
             <div id="create-user" class="page slide-hide">
                 <h1>Login</h1>
-                <form class="create-pass-form">
+                <div class="create-pass-form">
                     <div class="form-field-label">
                         <label for="near-issue">Your near issue</label>
                         <div class="form-control">
@@ -153,7 +163,7 @@
                         <button class="btn-primary" id="login">Create
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
 
 
@@ -206,14 +216,6 @@
                         <div class="balance">{skash}</div>
                     </div>
                     <div class="label-value">
-                            <label>Rewards</label>
-                        <div class="balance">{rewards}</div>
-                    </div>
-                    <div class="label-value">
-                        <label>Historic Rewards</label>
-                        <div class="balance">{historicRewards}</div>
-                    </div>
-                    <div class="label-value">
                         <label>Buy SKASH Orders</label>
                         <div class="balance">{buyOrders}</div>
                     </div>
@@ -229,7 +231,15 @@
                         <label>Wait to withdraw</label>
                         <div class="timespan">{remainingTimeString}</div>
                     </div>
-                </div>
+                    <div class="label-value">
+                        <label>Rewards since</label>
+                    <div class="datetime">{tripMeterStart}</div>
+                    </div>
+                    <div class="label-value">
+                        <label>Rewards</label>
+                        <div class="balance">{tripMeterRewards}</div>
+                    </div>
+            </div>
 
                 <div class="footer">
 
@@ -244,6 +254,7 @@
                             <button id="unstake">Sell SKASH/Unstake</button>
                         </div>
                         <div class="button-group">
+                            <button id="refresh-account">Refresh</button>
                             <button id="close-account">Close Account</button>
                         </div>
                     </div>
@@ -260,7 +271,7 @@
                                 Your funds are secure and available. You can withdraw your available NEARS at any time.
                             </h3>
                         </div>
-                        <form class="deposit-form">
+                        <div class="deposit-form">
                             <div class="form-field-label">
                                 <label for="deposit-amount">
                                     Amount in NEAR to deposit
@@ -269,7 +280,7 @@
                                     <input id="deposit-amount" type="number">
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
                     <!-- WITHDRAW NEAR -->
@@ -278,7 +289,7 @@
                         <div class="subtitle">
                             <h3 class="success">You can withdraw from your available balance.</h3>
                         </div>
-                        <form class="withdraw-form">
+                        <div class="withdraw-form">
                             <div class="form-field-label">
                                 <label for="withdraw-amount">
                                     Amount in NEAR to withdraw (Max <span id="max-withdraw"></span>)
@@ -287,13 +298,13 @@
                                     <input id="withdraw-amount" type="number">
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
                     <!-- subpage BUY SKASH/STAKE -->
                     <div id="buy-skash" class="subpage hidden">
                         <h1>Buy SKASH/Stake</h1>
-                        <form>
+                        <div>
                             <div class="form-field-label">
                                 <label for="buy-amount">
                                     Amount in NEAR
@@ -320,13 +331,13 @@
                                 <label>Msg</label>
                                 <div id="buy-result-message"></div>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
                     <!-- subpage SELL SKASH/STAKE -->
                     <div id="sell-skash" class="subpage hidden">
                         <h1>Sell SKASH/Unstake</h1>
-                        <form>
+                        <div>
                             <div class="form-field-label">
                                 <label for="sell-amount">
                                     SKASH Amount to sell
@@ -353,7 +364,7 @@
                                 <label>Msg</label>
                                 <div id="sell-result-message"></div>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
 

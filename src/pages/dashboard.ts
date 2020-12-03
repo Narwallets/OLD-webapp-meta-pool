@@ -6,30 +6,24 @@ import { ExtendedAccountData } from "../data/ExtendedAccount.js"
 import { show as MyAccountPage_show } from "./my-account.js"
 
 import { wallet } from "../wallet-api/wallet.js"
+import { divPool } from "../contracts/div-pool.js"
 
-//--------------------------
-function init() {
-  d.onClickId("enter-my-account", myAccountClicked);
-}
-
-//--------------------------
-export function show() {
-
-  init()
+async function dashboardRefresh(){
 
   d.hideErr()
 
-  let dashboardInfo = {
-    total: 10000000,
-    historicRewards: 145232.23,
-    skash: 9432545,
-    lastRewards: 12663,
+  let contractInfo = await divPool.get_contract_info(wallet)
+
+  let dashboardInfo =
+  {
+    total: c.toStringDec(c.yton(contractInfo.total_available)+c.yton(contractInfo.total_for_staking)+c.yton(contractInfo.total_for_unstaking)),
+    historicRewards: c.toStringDec(c.yton(contractInfo.accumulated_staked_rewards)),
+    skash: c.ytonString(contractInfo.total_for_staking),
     skashSellMarket: 432553,
     skashBuyMarket: 275424,
     timeToRewardsString: "7hs 45min",
-    expectedRewards: 14566,
     numberOfPools: 22,
-    averageFee: 1.8
+    numberOfAccounts: 22,
   }
   //show dashboard info
   d.applyTemplate("dashboard", "dashboard-template", dashboardInfo)
@@ -39,7 +33,16 @@ export function show() {
       el.innerText = el.innerText.replace(".00", "")
     }
   })
-  d.showPage("main-page")
+  d.showPage("dashboard-page")
+}
+
+//--------------------------
+export async function show() {
+
+  d.onClickId("enter-my-account", myAccountClicked);
+  d.onClickId("refresh-dashboard", dashboardRefresh);
+
+  dashboardRefresh()
 
 }
 

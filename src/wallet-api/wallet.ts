@@ -215,7 +215,7 @@ export class Wallet {
     /**
      * A single contract "payable" fn call
      */
-    async call(contract:string, method:string, args:Record<string,any>, TGas:number, attachedNEAR:number):Promise<any>{
+    async call(contract:string, method:string, args:Record<string,any>, TGas:number, attachedNEAR:number=0):Promise<any>{
         const bt=new BatchTransaction(contract)
         bt.addItem(new FunctionCall(method,args,TGas,attachedNEAR))
         return this.apply(bt)

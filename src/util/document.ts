@@ -92,7 +92,7 @@ export function inputById(id:string):HTMLInputElement {
   return elemClass.el as HTMLInputElement
 }
 export function getNumber(selector:string){
-  const amountElem = new El("#deposit-amount")
+  const amountElem = new El(selector)
   return c.toNum(amountElem.value)
 }
 
@@ -237,6 +237,9 @@ export function templateReplace(template:string, obj:any, prefix:string="") :str
     }
     else if (typeof value === "number") {
       text = numberFormatFunction(value, key)
+    }
+    else if (value instanceof Date) {
+      text = value.toString()
     }
     else if (typeof value === "object") {
       result = templateReplace(result, value, key + ".") //recurse

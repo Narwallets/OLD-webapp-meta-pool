@@ -1,15 +1,12 @@
 import * as c from "../util/conversions.js"
 import * as d from "../util/document.js"
 
-import { options } from "../data/options.js"
-
 import * as near from "../wallet-api/lib/near-rpc.js"
 import { develMode, wallet } from "../wallet-api/wallet.js"
 
 import { ExtendedAccountData } from "../data/ExtendedAccount.js"
-import { localStorageSet } from "../data/util.js"
 
-import * as Main from "./main.js"
+import * as Dashboard from "./dashboard.js"
 
 import type { AnyElement, ClickHandler } from "../util/document.js"
 import { CONTRACT_ACCOUNT, divPool, NETWORK } from "../contracts/div-pool.js"
@@ -29,12 +26,14 @@ function init() {
     cancelBtn = new d.El("#account-selected-action-cancel")
 
     const backLink = new d.El("#my-account.page .back-link");
-    backLink.onClick(Main.show);
+    backLink.onClick(Dashboard.show);
 
     d.onClickId("stake", stakeClicked);
     d.onClickId("unstake", unstakeClicked);
     d.onClickId("deposit", depositClicked);
     d.onClickId("withdraw", withdrawClicked);
+
+    d.onClickId("refresh-account", refreshAccountClicked);
     d.onClickId("close-account", closeAccountClicked);
 
     showButtons(); //2nd or third entry - always show the buttons
@@ -43,6 +42,7 @@ function init() {
     cancelBtn.onClick(cancelClicked);
 
 }
+
 
 //-----------------
 export async function show(reposition?: string) {
@@ -147,7 +147,7 @@ async function withdrawClicked() {
 function depositClicked() {
     walletConnectedSubPage('deposit-subpage', performDeposit)
     const amountText = d.qs("#deposit-amount")
-    amountText.value="100"
+    amountText.value = "100"
     amountText.el.focus()
 }
 
@@ -158,13 +158,7 @@ function stakeClicked() {
         const info = cachedAccountData
         const stakeAmountBox = d.inputById("stake-amount")
         let performer = performStake //default
-        let amountToStake
-        if (info.available > 0) {
-            amountToStake = info.unstaked
-        }
-        else {
-            amountToStake = info.available + info.rewards
-        }
+        let amountToStake = info.available
 
         if (info.type == "lock.c") {
             //checkOwnerAccessThrows("stake")
@@ -521,15 +515,17 @@ async function performDeposit() {
         if (!d.isPositive(nearsToDeposit)) throw Error("Amount should be > 0");
 
         disableOKCancel()
-        
-        const timeoutSecs=(NETWORK=="testnet"?20:300);
+
+        const timeoutSecs = (NETWORK == "testnet" ? 20 : 300);
         d.showWait(timeoutSecs) //5 min timeout, give the user time to decide
 
-        await divPool.deposit(wallet,nearsToDeposit)
+        await divPool.deposit(wallet, nearsToDeposit)
 
         showButtons()
 
         d.showSuccess("Success: " + wallet.accountId + " deposited " + c.toStringDec(nearsToDeposit) + "\u{24c3}")
+
+        refreshAccount()
 
     }
     catch (ex) {
@@ -544,20 +540,22 @@ async function performDeposit() {
 
 async function performWithdraw() {
     try {
+        disableOKCancel()
+        d.showWait()
+
         //if (!selectedAccountData.accountInfo.privateKey) throw Error("Account is read-only")
         const amount = d.getNumber("#withdraw-amount")
 
         if (!d.isPositive(amount)) throw Error("Amount should be > 0");
         if (amount > cachedAccountData.available) throw Error("max amount is " + c.toStringDec(cachedAccountData.available));
 
-        disableOKCancel()
-        d.showWait()
-
-        await wallet.call(CONTRACT_ACCOUNT, "withdraw", {}, 25, amount)
+        await divPool.withdraw(wallet, amount)
 
         showButtons()
 
         d.showSuccess("Success: " + wallet.accountId + " withdrew " + c.toStringDec(amount) + "\u{24c3}")
+
+        refreshAccount()
 
     }
     catch (ex) {
@@ -572,7 +570,7 @@ async function performWithdraw() {
 
 
 function exploreButtonClicked() {
-    localStorageSet({ reposition: "account", account: cachedAccountData.nearAccount })
+    //localStorageSet({ reposition: "account", account: cachedAccountData.nearAccount })
     chrome.windows.create({
         url: "",//Network.currentInfo().explorerUrl + "accounts/" + selectedAccountData.nearAccount,
         state: "maximized"
@@ -774,24 +772,23 @@ function closeAccountClicked(ev: Event) {
         //persist
         //global.saveSecureState()
         //return to main page
-        Main.show()
+        Dashboard.show()
     }
     catch (ex) {
         d.showErr(ex.message)
     }
 }
 
-async function refreshClicked(ev: Event) {
-
-    d.showWait()
+async function refreshAccount() {
+    await getAccountData()
+    showAccountData()
+}
+async function refreshAccountClicked(ev: Event) {
     try {
-        //await refreshSelectedAccount()
-        d.showSuccess("Account data refreshed")
+        refreshAccount()
+        d.showSuccess("Account refreshed")
     }
     catch (ex) {
         d.showErr(ex.message)
-    }
-    finally {
-        d.hideWait()
     }
 }

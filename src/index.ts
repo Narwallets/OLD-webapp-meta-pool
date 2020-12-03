@@ -1,7 +1,7 @@
 import * as d from "./util/document.js"
 
-import { recoverOptions } from "./data/options.js"
-import * as Main from "./pages/main.js"
+import * as InitialPage from "./pages/initial.js"
+import * as Dashboard from "./pages/dashboard.js"
 
 import { wallet } from "./wallet-api/wallet.js"
 
@@ -12,7 +12,6 @@ import { isValidEmail } from "./util/email.js"
 //import { addListeners as Import_addListeners } from "./pages/import.js"
 
 import { show as MyAccountPage_show } from "./pages/my-account.js"
-import { localStorageGet, localStorageGetAndRemove, localStorageRemove, localStorageSet } from "./data/util.js"
 
 
 import * as bip39 from "../bundled-types/bip39-light"
@@ -68,7 +67,7 @@ function hambClicked() {
 
 function asideAccounts() {
   hambClicked();
-  Main.show();
+  InitialPage.show();
 }
 
 
@@ -81,7 +80,7 @@ function securityOptions() {
 
   d.showPage("security-options")
   d.onClickId("save-settings", saveSecurityOptions)
-  d.onClickId("cancel-security-settings", Main.show)
+  d.onClickId("cancel-security-settings", InitialPage.show)
 }
 
 function saveSecurityOptions(ev:Event) {
@@ -96,7 +95,7 @@ function saveSecurityOptions(ev:Event) {
 
 
 
-    Main.show()
+    InitialPage.show()
     d.showSuccess("Options saved")
   }
   catch (ex) {
@@ -115,19 +114,21 @@ function addAccountClicked() {
 }
 
 async function tryReposition() {
-  const reposition = await localStorageGetAndRemove("reposition")
+  //const reposition = await localStorageGetAndRemove("reposition")
+  /*
   switch (reposition) {
     case "create-user": { //was creating user but maybe jumped to terms-of-use
       welcomeCreatePassClicked()
-      d.inputById("email").value = await localStorageGetAndRemove("email")
+      //d.inputById("email").value = await localStorageGetAndRemove("email")
       break;
     }
     case "account": case "stake":  {
-      const account = await localStorageGetAndRemove("account")
+      const account = "" //await localStorageGetAndRemove("account")
       if (account) MyAccountPage_show(reposition)
     }
   }
-}
+    */
+  }
 
 function connectionInfoClicked(){
   const div = d.byId("connection-info")
@@ -136,15 +137,17 @@ function connectionInfoClicked(){
 
 function walletConnected(ev:CustomEvent){
   const div = d.byId("connection-info")
-  div.innerText = "Connected: " + ev.detail.data.accountId;
+  div.innerText = ev.detail.data.accountId;
   div.classList.add("connected")
   d.showSuccess("wallet connected")
+  Dashboard.show()
 }
 function walletDisconnected(ev:CustomEvent){
   const div = d.byId("connection-info")
   div.innerText = "Not connected";
   div.classList.remove("connected")
   d.showSuccess("wallet disconnected")
+  InitialPage.show()
 }
 
 // ---------------------
@@ -184,7 +187,7 @@ async function onLoad() {
   //new d.El(".aside #contact).asideContact);
   //new d.El(".aside #about).asideAbout);
 
-  Main.show()
+  InitialPage.show()
 
   /*
   //restore State from chrome.storage.local

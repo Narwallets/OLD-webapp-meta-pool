@@ -9,6 +9,8 @@ import * as sha256 from './sha256.js';
 import type { BN as BNType } from '../../../bundled-types/BN.js';
 declare var BN: typeof BNType;
 
+declare var Buffer:any;
+
 //---------------------------
 //-- NEAR PROTOCOL RPC CALLS
 //---------------------------
@@ -148,6 +150,7 @@ export function access_key(accountId: string, publicKey: string): Promise<any> {
 //-------------------------------
 export function viewRaw(contractId: string, method: string, args?: any): Promise<any> {
     let encodedArgs = undefined;
+    //@ts-ignore
     if (args) encodedArgs = bs58.encode(Buffer.from(JSON.stringify(args)));
     return jsonRpcQuery("call/" + contractId + "/" + method, encodedArgs);
 }
