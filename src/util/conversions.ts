@@ -13,7 +13,7 @@ export function ytonString(yoctos:string):string {
 }
 
 /**
- * returns Near number with 4 decimal digits
+ * converts yocto string to Near number truncated to 4 decimal places
  * @param {string} yoctos amount in yoctos
  */
 export function yton(yoctos:string):number {

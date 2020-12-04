@@ -1,36 +1,7 @@
-import {BatchTransaction, FunctionCall, Transfer} from "./batch-transaction.js"
+import {BatchTransaction, FunctionCall, Transfer} from "./lib/batch-transaction.js"
+import {backgroundRequest, processRequestResolved} from "./lib/background-request.js"
 
-import * as TX from "./lib/transaction.js"
-import type { BN as BNType } from '../../bundled-types/BN.js';
-declare var BN: typeof BNType;
-import * as near from "./lib/near-rpc.js"
-import {setRpcUrl} from "./lib/utils/json-rpc.js"
-import {backgroundRequest, processRequestResolved} from "./lib/backgroundRequest.js"
-
-//--------------------------
-//-- DEVEL MODE SINGLETON --
-//--------------------------
-
-class DevelModeSingleton {
-
-    enabled =  false
-    accountId = ""
-    privateKey = ""
-
-    enable(accountId:string, privateKey:string){
-        this.enabled= true;
-        this.accountId= accountId;
-        this.privateKey=privateKey;
-    }
-
-    disable(){
-        this.enabled=false;
-    }
-
-}
-export let develMode = new DevelModeSingleton();
-
-//requests made to the extension
+//requests made to the chrome-extension wallet
 type requestInfo = {
     payload:any,
     resolve: Function,
@@ -39,18 +10,16 @@ type requestInfo = {
 const requests:requestInfo[]=[];
 let requestId=0; //incremental request-id
 
-
 //----------------------------------------
 //-- LISTEN to "message" from injected content script
 //-- msg path is ext-> content-script-> here-> dispatchEvent("wallet-connected"|"wallet-disconnected"|"wallet-event")
 //-- process by raising 'wallet-event'  
 //----------------------------------------
-console.log("wallet.ts addEventListener(message)")
 window.addEventListener("message", 
     function(event) {
         console.log("wallet-ts messagelistener",event.data.dest, event.data);
         if (event.source != window) return; //only internal messages (from the injected content script)
-        if (event.data.dest!="page") return;
+        if (event.data.dest!="page") return; //only messages destined to this web page (DApp) 
         msgReceivedFromContentScript(event.data)
     }
     , false)
@@ -72,7 +41,7 @@ function msgReceivedFromContentScript(msg:Record<string,any>){
         //turn on connected flags
         wallet._isConnected = true;
         wallet._accountId = msg.data.accountId;
-        //respond back so the wallet knows we're listening
+        //respond back so the the chrome-extension knows we're listening
         window.postMessage(response,"*")
     }
     else if (msg.code=="disconnect"){
@@ -82,11 +51,13 @@ function msgReceivedFromContentScript(msg:Record<string,any>){
         return;
     }
     else if (msg.code=="request-resolved"){
+        //chrome-extension completed a request
         //find & resolve the request by requestId 
         processRequestResolved(msg);
     }
 
     //Also dispatchEvent to the DApp can react to extension-wallet events
+    //like "wallet-connected"|"wallet-disconnected"
     let eventKey:string = eventFromCode(msg.code);
     const eventInfo = 
         new CustomEvent(
@@ -111,7 +82,7 @@ function eventFromCode(code:string):string{
 }
 
 /* ----------------
-Known events:
+example event data:
   connected = {
         code: 'connected',
         source:'ext',
@@ -139,13 +110,11 @@ export class Wallet {
     }
 
     get network(){ return this._network }
-    set network(value:string){
-        this._network = value;
-        setRpcUrl(`https://rpc.${value}.near.org/`)
-    }
+    set network(value:string){ this._network = value;}
 
-    // Note: Connection is started from the extension, so web pages don't get any info before the user decides to "connect"
-    // Also pages don't need to create buttons/options to connect to different wallets, as long all wallets connect with pages by the same API
+    // Note: Connection is started from the chrome-extension, so web pages don't get any info before the user decides to "connect"
+    // Also pages don't need to create buttons/options to connect to different wallets, as long all wallets connect with Dapp-pages by using this API
+    // potentially, a single DApp can be used to operate on multiple chains, since all requests are high-level and go thru the chrome-extension
 
     get isConnected() {return this._isConnected}
    
@@ -172,42 +141,12 @@ export class Wallet {
     }
 
     /**
-     * ASYNC. Applies the transaction in the NEAR blockchain
-     */
-    async apply (bt:BatchTransaction):Promise<any>{
-
-        wallet.checkConnected()
-        
-        if (develMode.enabled){
-            const actions: TX.Action[]=[];
-            for(let item of bt.items){
-                if (item instanceof FunctionCall){
-                    actions.push(TX.functionCall(item.method, item.args, near.ONE_TGAS.muln(item.Tgas), near.ONE_NEAR.muln(item.attachedNear)))
-                }
-                else if(item instanceof Transfer){
-                    actions.push(TX.transfer(near.ONE_NEAR.muln(item.attachedNear)))
-                }
-            }
-            return near.broadcast_tx_commit_actions(actions, this.accountId, bt.receiver, develMode.privateKey)
-        }
-
-        //normal mode - ask the extension to broadcast the transaction
-        //register request. Promise will be resolved when the response arrives
-        const requestPayload={dest:"ext", code:"apply", tx:bt}
-        return backgroundRequest(requestPayload);
-    }
-
-    /**
      * Just a single contract "view" call
      */
     async view (contract:string, method:string, args:Record<string,any>):Promise<any>{
-        wallet.checkConnected()
-        
-        if (develMode.enabled){
-            return near.view(contract,method,args)
-        }
 
-        //normal mode - ask the extension to make the view-call
+        wallet.checkConnected()
+        //ask the extension to make the view-call
         const requestPayload={dest:"ext", code:"view", contract:contract, method:method, args:args}
         return backgroundRequest(requestPayload);
     }
@@ -219,6 +158,19 @@ export class Wallet {
         const bt=new BatchTransaction(contract)
         bt.addItem(new FunctionCall(method,args,TGas,attachedNEAR))
         return this.apply(bt)
+    }
+
+    /**
+     * ASYNC. Applies/bradcasts a BatchTransaction to the blockchain
+     */
+    async apply (bt:BatchTransaction):Promise<any>{
+
+        wallet.checkConnected()
+        
+        //ask the extension to broadcast the transaction
+        //register request. Promise will be resolved when the response arrives
+        const requestPayload={dest:"ext", code:"apply", tx:bt}
+        return backgroundRequest(requestPayload);
     }
 
     //to add event listeners

@@ -1,8 +1,6 @@
 import * as d from "../util/document.js"
 import * as c from "../util/conversions.js"
 
-
-import { ExtendedAccountData } from "../data/ExtendedAccount.js"
 import { show as MyAccountPage_show } from "./my-account.js"
 
 import { wallet } from "../wallet-api/wallet.js"

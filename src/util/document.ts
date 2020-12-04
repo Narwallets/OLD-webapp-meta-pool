@@ -1,4 +1,7 @@
-//--- DOCUMENT UTILITIES ---
+//---------------------
+//--- DOM UTILITIES ---
+//---------------------
+
 import * as c from "./conversions.js"
 
 export type ClickHandler = (()=>void) | ((ev:Event)=>void) |  ((ev:Event)=>Promise<void>) | (()=>Promise<void>) 
@@ -16,27 +19,6 @@ export const HIDDEN = "hidden"
 export const ERR_DIV = "err-div"
 export const WAIT = "wait"
 
-export const IUOP = "Invalid user or password"
-
-//export function setNumberFormatFunction
-
-//----js simple independent utility FUNCTIONS  -------
-// add property get Object.isEmpty --> returns true if the object is {}
-// Object.defineProperty(Object.prototype, 'isEmpty', {
-//   get() {
-//     for (var p in this) {
-//       if (this.hasOwnProperty(p)) { return false }
-//     }
-//     return true;
-//   }
-// })
-// declare global {
-//   interface Object {
-//     isEmpty:boolean;
-//   }
-// }
-
-
 //----DOM COMMON simple independent utility FUNCTIONS  -------
 /**
  * wrapper around document.getElementById -> HTMLElement
@@ -47,12 +29,14 @@ export function byId(id:string):HTMLElement {
     return document.getElementById(id) as HTMLElement
   }
   catch {
+    console.error(`document.getElementById(${id}) NOT FOUND`)
     return new HTMLElement();
   }
 }
 
 //---
-//-- seach elements fo type button adn sel click listener
+//-- seach button elements with the id and add click listener
+//---
 export function onClickId(id:string, clickHandler:(ev:Event)=>void) {
   try {
     let elems = document.querySelectorAll("button#" + id);
@@ -67,10 +51,14 @@ export function onClickId(id:string, clickHandler:(ev:Event)=>void) {
     elem.addEventListener(CLICK, clickHandler);
   }
   catch (ex) {
-    console.error("ERR: onClick('" + id + "') " + ex.message);
+    console.error("ERR: onClickId('" + id + "') " + ex.message);
   }
 }
-
+/**
+ * add an event when Enter is pressed in an input-box
+ * @param textId 
+ * @param clickHandler 
+ */
 export function onEnterKey(textId:string, clickHandler:(ev:Event)=>void) {
   byId(textId).addEventListener("keyup", (event:KeyboardEvent) => { if (event.key === 'Enter') clickHandler(event) })
 }
@@ -78,7 +66,6 @@ export function onEnterKey(textId:string, clickHandler:(ev:Event)=>void) {
 export function onClickSelector(selector:string, clickHandler:(ev:Event)=>void) {
   new El(selector).onClick(clickHandler)
 }
-
 
 
 export type AnyElement = HTMLElement & HTMLInputElement & HTMLButtonElement; 
@@ -91,21 +78,19 @@ export function inputById(id:string):HTMLInputElement {
   const elemClass = qs("input#"+id)
   return elemClass.el as HTMLInputElement
 }
+/**
+ * get a Number from a text element, by selector
+ * @param selector
+ */
 export function getNumber(selector:string){
   const amountElem = new El(selector)
   return c.toNum(amountElem.value)
 }
 
-export function isPositive(amount: number): boolean {
-  if (isNaN(amount)) return false;
-  if (amount < 0) return false;
-  return true
-}
-
 //-------------------------------------------------------
 /**
-* showPage(id)
-* removes class=hidden from an .class#id
+* showByClass(id)
+* removes class=hidden from a DIV with id=id & class=className
 * @param id 
 */
 export function showByClass(id:string, className:string) {
@@ -128,6 +113,11 @@ export function showByClass(id:string, className:string) {
   toShow.classList.add("show"); //animate
 }
 
+/**
+* showByClass(id)
+* removes class=hidden from a DIV with id=id & class="page"
+* @param id 
+*/
 export function showPage(id:string) {
   showByClass(id, "page");
 }
@@ -144,7 +134,7 @@ export function hideDiv(id:string) {
 //----- NOTIFICATIONS ---------------
 //-----------------------------------
 // shows a message on ERR_DIV for 5 seconds
-// requires div id="err-div" and class .show
+// requires div id="err-div" and css class .show
 export function showErr(msg:string) {
   showMsg(msg, "error");
   console.error(msg)
@@ -335,7 +325,7 @@ export function getClosestChildText(parentSelector:string, target:EventTarget|nu
 }
 
 //------------------------------------------------------------
-//a safe query selector, throws if there's more than one
+// a safe query selector, throws if there's more than one
 //------------------------------------------------------------
 export function qs(selector:string) {
   return new El(selector)
@@ -410,7 +400,7 @@ export class El {
 
 
 //------------------------------------------------------------
-//a safe query selector ALL, throws if there's none
+// a safe query selector ALL, throws if there's none
 //------------------------------------------------------------
 export function all(selector:string) {
   return new All(selector)

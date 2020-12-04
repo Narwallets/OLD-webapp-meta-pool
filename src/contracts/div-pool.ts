@@ -1,9 +1,13 @@
+//----------------------------------
+// DIVERSIFYING STAKING POOL smart-contract proxy
+// https://github.com/Narwallets/diversifying-staking-pool
+//----------------------------------
+
 import {ntoy} from "../util/conversions.js"
 import {Wallet} from "../wallet-api/wallet.js"
 
 //export const CONTRACT_ACCOUNT = "diversifying-pool.guildnet"
 export const CONTRACT_ACCOUNT = "diversifying.pool.testnet"
-export const NETWORK = "testnet"
 
 //struct returned from get_account_info
 export type GetAccountInfoResult = {
@@ -91,7 +95,7 @@ export type ContractInfo = {
     staking_pools_count: string, //U64, 
 }
 
-//singleton export
+//singleton class
 export class DivPool {
     
     contractAccount:string;
@@ -100,7 +104,6 @@ export class DivPool {
     {
         this.contractAccount = contractAccount
     }
-
     
     get_contract_info(wallet:Wallet) : Promise<ContractInfo> {
         return wallet.view(this.contractAccount,"get_contract_info",{})
@@ -119,5 +122,6 @@ export class DivPool {
 
 }
 
+//singleton export
 export const divPool = new DivPool(CONTRACT_ACCOUNT);
 

@@ -299,7 +299,7 @@ button {
   font-size: 1.5em;
   font-weight: 250;
   /* line-height: 1.25rem; */
-  border-radius: 6px;
+  border-radius: 18px;
   transition: border-color 0.4s ease, background-color 0.4s ease;
   flex: 1 1;
   /* max-width: 150px; */
@@ -308,7 +308,7 @@ button {
   border: 2px solid #00800029;
   font-stretch: expanded;
   font-variant: all-small-caps;
-  letter-spacing: 3px;
+  letter-spacing: 0px;
   padding: 3px 10px 7px 10px;
   line-height: 1em;
   /* overflow: auto; */
@@ -316,8 +316,8 @@ button {
 }
 
 button:hover:not(:disabled) {
-  border-color: #fa971e;
-  background-color: #e89700e6;
+  border-color: #859032;
+  background-color: #949243c7;
 }
 
 button:disabled {

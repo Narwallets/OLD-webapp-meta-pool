@@ -23,21 +23,13 @@
 * `npm run build` in one terminal to start `tsc -w` (continuous typescript compilation)
 * `npm run serve` in another terminal to run a simple web server `python3 -m http.server`
 * With chrome navigate to: http://localhost:8000/DApp/
+* You'll need Narwallets chrome-extension installed https://github.com/Narwallets/narwallets-extension
 * Chrome Dev Tools: Map folder to /repos/diversifying-staking-pool
-* Use VSCode as the main IDE - Ctrl-Shift-B to build with typescript
 * Use Chrome Dev Tools as a quick-and-dirty IDE with Edit & Continue
+* Use VSCode as the main IDE - Ctrl-Shift-B to build with typescript
 
-## Low-level Technical debt
+## Help needed
 
-* We're using base crypto libs as a bundle (The ideal solution would be to have typescript versions of each lib and compile to ES2020 modules) 
+* Complete reestyle of the DApp
 
-We need to reduce the bundle's size. Bundle is at https://github.com/Narwallets/bundled-crypto-libs.git
-
-Bundle includes:
-
-* globalThis.Buffer = SafeBuffer.Buffer
-* globalThis.BN = BN
-* globalThis.bip39 = bip39
-* globalThis.pbkdf2 = pbkdf2
-* globalThis.createHmacPackage = {createHmac:createHmac} 
 
