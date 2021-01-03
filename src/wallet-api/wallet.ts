@@ -1,98 +1,5 @@
+import {backgroundRequest} from "./lib/background-request.js"
 import {BatchTransaction, FunctionCall, Transfer} from "./lib/batch-transaction.js"
-import {backgroundRequest, processRequestResolved} from "./lib/background-request.js"
-
-//requests made to the chrome-extension wallet
-type requestInfo = {
-    payload:any,
-    resolve: Function,
-    reject: Function,
-}
-const requests:requestInfo[]=[];
-let requestId=0; //incremental request-id
-
-//----------------------------------------
-//-- LISTEN to "message" from injected content script
-//-- msg path is ext-> content-script-> here-> dispatchEvent("wallet-connected"|"wallet-disconnected"|"wallet-event")
-//-- process by raising 'wallet-event'  
-//----------------------------------------
-window.addEventListener("message", 
-    function(event) {
-        console.log("wallet-ts messagelistener",event.data.dest, event.data);
-        if (event.source != window) return; //only internal messages (from the injected content script)
-        if (event.data.dest!="page") return; //only messages destined to this web page (DApp) 
-        msgReceivedFromContentScript(event.data)
-    }
-    , false)
-;
-
-function msgReceivedFromContentScript(msg:Record<string,any>){
-    
-    console.log("msg ext->page: " + JSON.stringify(msg));
-
-    //handle connect and disconnect
-    if (msg.code=="connect"){
-        const response={dest:"ext", code:"connected", relayer:"wallet-api", version:"0.1", network:wallet.network, err:""}
-        if (!msg.data || msg.data.network!=wallet.network){
-            //respond back what network we're working in
-            response.err="The web page requires an account on "+wallet.network;
-            window.postMessage(response,"*")
-            return;
-        }
-        //turn on connected flags
-        wallet._isConnected = true;
-        wallet._accountId = msg.data.accountId;
-        //respond back so the the chrome-extension knows we're listening
-        window.postMessage(response,"*")
-    }
-    else if (msg.code=="disconnect"){
-        if (wallet.isConnected) {      
-            wallet.disconnect(); //dispatchs event, does it all
-        }   
-        return;
-    }
-    else if (msg.code=="request-resolved"){
-        //chrome-extension completed a request
-        //find & resolve the request by requestId 
-        processRequestResolved(msg);
-    }
-
-    //Also dispatchEvent to the DApp can react to extension-wallet events
-    //like "wallet-connected"|"wallet-disconnected"
-    let eventKey:string = eventFromCode(msg.code);
-    const eventInfo = 
-        new CustomEvent(
-            eventKey,
-            { detail:{
-                source:'ext',
-                code: msg.code,
-                err: msg.err,
-                data: msg.data,
-                }
-            })
-    console.log("document.dispatchEvent "+ eventInfo.type) 
-    document.dispatchEvent(eventInfo);
-}
-
-function eventFromCode(code:string):string{
-    switch(code){
-        case "connect": return "wallet-connected";
-        case "disconnect": return "wallet-disconnected";
-        default: return 'wallet-event';
-    }
-}
-
-/* ----------------
-example event data:
-  connected = {
-        code: 'connected',
-        source:'ext',
-        dest:'page',
-        err: undefined,
-        data: {
-            accountId: "${user_account_id}"
-        },
-  }
-*/
 
 type EventHandler = (this:Document,ev:any)=>any;
 
@@ -161,7 +68,7 @@ export class Wallet {
     }
 
     /**
-     * ASYNC. Applies/bradcasts a BatchTransaction to the blockchain
+     * ASYNC. Applies/broadcasts a BatchTransaction to the blockchain
      */
     async apply (bt:BatchTransaction):Promise<any>{
 

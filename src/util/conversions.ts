@@ -18,8 +18,8 @@ export function ytonString(yoctos:string):string {
  */
 export function yton(yoctos:string):number {
     try {
-        const just4dec = ytonFull(yoctos).slice(0, -20)
-        return Number(just4dec) // truncated to 4 decimals 
+        const just4dec = ytonFull(yoctos).slice(0, -20) // truncated to 4 decimals 
+        return Number(just4dec) 
     }
     catch (ex) {
         console.error("ERR: ytoNN(", yoctos, ")", ex)

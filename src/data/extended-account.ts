@@ -16,8 +16,9 @@ export class ExtendedAccountData {
   tripMeterStart: Date;
   tripMeterRewards: number = 0;
   remainingTimeString: string = "";
-  buyOrders: number = 0;
-  sellOrders: number = 0;
+  nslp_shares: number;
+  nslp_share_value: number;
+  g_skash: number;
 
   constructor(accountInfo: GetAccountInfoResult) {
     this.accountInfo = accountInfo;
@@ -27,6 +28,9 @@ export class ExtendedAccountData {
     this.unstaked = c.yton(accountInfo.unstaked)
     this.tripMeterStart = new Date(+accountInfo.trip_start)
     this.tripMeterRewards = c.yton(accountInfo.trip_rewards)
+    this.nslp_shares = c.yton(accountInfo.nslp_shares)
+    this.nslp_share_value = c.yton(accountInfo.nslp_share_value)
+    this.g_skash = c.yton(accountInfo.g_skash)
   }
 
   get inThePool(): number {

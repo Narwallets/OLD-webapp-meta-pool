@@ -21,6 +21,7 @@
     align-items: center;
     justify-items: flex-end;
     max-height: 52px;
+    width: 100%;
 }
 
 .app-header-contents {
@@ -91,7 +92,7 @@ li {
 }
 .subtitle {
     text-align: center;
-    max-width: 354px;
+    max-width: 700px;
 }
 
 .btn {
@@ -115,6 +116,7 @@ li {
     /* min-height: 548px; */
     /* overflow-y: auto; */
 }
+
 
 h1 {
     text-align: center;
@@ -154,6 +156,7 @@ h3 {
     text-align: center;
     font-weight: 250;
     font-size: 1.2em;
+    line-height: 1.5em;
 }
 
 .contents-header {
@@ -179,7 +182,7 @@ h3 {
 
 .btn-primary {
     color: #fff;
-    background-color: #61bfce;
+    background-color: #5ebfc3;
 }
 .btn-cancel {
     color: #fff;
@@ -325,7 +328,7 @@ h3 {
     width: 400px;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
     flex: 1 1 auto;
 }
 
@@ -447,8 +450,8 @@ h3 {
     flex-flow: row nowrap;
     justify-content: space-around;
     display: flex;
-    min-width: 230px;
-    max-width: 250px;
+    /* min-width: 230px; */
+    /* max-width: 600px; */
     padding: 3px 0px;
     border-top: solid 1px lightgray;
 }
@@ -460,18 +463,18 @@ h3 {
 }
 
 .account-selected .footer button  {
-    font-size: 1.3em;
+    font-size: 1.2em;
     flex: 1 1 30%;
     min-height: 45px;
-    max-height: 45px;
-    max-width: 170px;
+    /* max-height: 56px; */
+    /* max-width: 800px; */
     /* padding: 6px 10px 10px 12px; */
     line-height: 0.8em;
     margin: 4px;
-    min-width: 170px;
+    min-width: 181px;
 }
 
-.account-selected header {
+.page header {
     width: 100%;
     height: 32px;
     margin-left: 40px;
@@ -523,7 +526,7 @@ h3 {
 .pct::after {
     content:"%"
 }
-.pct, .timespan {
+.timespan {
    background-color: #f2f3cc !important;
  }
 .account{

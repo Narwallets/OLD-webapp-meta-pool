@@ -91,30 +91,58 @@ export function getNumber(selector:string){
 /**
 * showByClass(id)
 * removes class=hidden from a DIV with id=id & class=className
-* @param id 
+* @param id
 */
 export function showByClass(id:string, className:string) {
   const toShow = document.querySelectorAll("." + className + "#" + id)[0];
-  // comentado - hides useful info -hideErr(); //cleanup
-  //hide all others
-  document.querySelectorAll("." + className).forEach((el) => {
-    if (el !== toShow) {
-      el.classList.add("slide-hide");
-      el.classList.remove("show");
-    }
-  })
   if (!toShow) {
     console.error("." + className + "#" + id, "NOT FOUND")
     return;
   }
-  toShow.querySelectorAll("input").forEach((item) => item.value = "") //clear all input fields
-  toShow.classList.remove(HIDDEN); //show requested
-  toShow.classList.remove("slide-hide"); //show requested
-  toShow.classList.add("show"); //animate
-}
+  //clear all input fields
+  toShow.querySelectorAll("input").forEach((item) => item.value = "") 
 
+  //move ok-cancel common component to placeholder of current page
+  const okCancelCommon=document.querySelector("#ok-cancel")
+  if (okCancelCommon) {
+    toShow.querySelector("#ok-cancel-placeholder")?.appendChild(okCancelCommon)
+  }
+
+  const allPages=document.querySelectorAll("." + className)
+  allPages.forEach((el) => {
+    el.classList.remove(HIDDEN);
+  })
+  //the setTimeout is needed because  HIDDEN=>display:none, and setting display:none BREAKS ANIMATIONS
+  setTimeout(() => {
+      //animated hide all 
+    allPages.forEach((el) => {
+      el.classList.remove("show");
+      el.classList.add("slide-hide");
+      el.setAttribute("disabled","")
+    })
+    //show requested
+    toShow.classList.remove("slide-hide"); //show requested
+    toShow.classList.add("show"); //animate
+    toShow.removeAttribute("disabled")
+  }
+  ,100)
+
+  //after animation, hide the other divs so they're not in the tab order
+  setTimeout(() => {
+     //console.log(toShow.id)
+     allPages.forEach((el) => {
+       if (el.id != toShow.id) {
+         //console.log("hiding",el.id)
+         el.classList.add(HIDDEN)
+       }
+     })
+     //console.log("show",toShow.id)
+     toShow.classList.remove(HIDDEN)
+   }, 300)
+
+}
 /**
-* showByClass(id)
+* showPage(id)
 * removes class=hidden from a DIV with id=id & class="page"
 * @param id 
 */
@@ -251,38 +279,39 @@ export function clearContainer(containerId:string) {
 }
 
 export function appendTemplate(elType:string, containerId:string, templateId:string, data:Record<string,any>) {
-  const newLI = document.createElement(elType)  as HTMLLIElement
+  const newElement = document.createElement(elType)  as HTMLLIElement
   const templateElem=byId(templateId)
   if (templateElem==undefined) throw new Error("Template #"+templateId+" not found")
   //-- if data-id has value, set it
-  if (templateElem.dataset.id) newLI.id=templateReplace(templateElem.dataset.id,data) //data-id => id={x}
+  if (templateElem.dataset.id) newElement.id=templateReplace(templateElem.dataset.id,data) //data-id => id={x}
   //-- copy classes from template (except "hidden")
   //@ts-ignore
-  newLI.classList.add(...templateElem.classList) //add all classes
-  newLI.classList.remove("hidden") //remove hidden
+  newElement.classList.add(...templateElem.classList) //add all classes
+  newElement.classList.remove("hidden") //remove hidden
   //---
-  newLI.innerHTML = templateReplace(templateElem.innerHTML, data)
+  newElement.innerHTML = templateReplace(templateElem.innerHTML, data)
   const listContainer = byId(containerId)
-  listContainer.appendChild(newLI)
+  listContainer.appendChild(newElement)
+  return newElement
 }
 
 export function applyTemplate(containerId:string, templateId:string, data:Record<string,any>) {
   clearContainer(containerId)
-  appendTemplate("DIV",containerId,templateId,data)
+  return appendTemplate("DIV",containerId,templateId,data)
 }
 
 export function appendTemplateLI(containerId:string, templateId:string, data:Record<string,any>) {
-  appendTemplate("LI",containerId,templateId,data)
+  return appendTemplate("LI",containerId,templateId,data)
 }
 export function populateSingleLI(containerId:string, templateId:string, multiDataObj:Record<string,any>, key:string) {
   const dataItem = {
     key: key, ...multiDataObj[key]
   }
-  appendTemplateLI(containerId, templateId, dataItem)
+  return appendTemplateLI(containerId, templateId, dataItem)
 }
 export function populateUL(containerId:string, templateId:string, multiDataObj:Record<string,any>) {
   for (let key in multiDataObj) {
-    populateSingleLI(containerId, templateId, multiDataObj, key);
+    return populateSingleLI(containerId, templateId, multiDataObj, key);
   }
 }
 

@@ -3,14 +3,13 @@ body {
     font-size: 11pt;
     font-family: Ubuntu,"Segoe UI", Roboto, Arimo, Oxygen-Sans, Cantarell, Ubuntu, "Helvetica Neue", -apple-system,  BlinkMacSystemFont,sans-serif!important;
     font-weight: 300;
-    /* overscroll-behavior: none; */
-    /* overflow:hidden; */
 }
 
 *, *:before, *:after {
   box-sizing: border-box;
 }
 
+.app-header{position: absolute;max-height: 66px;}
 
 h1, h2 {
   text-align:center;
@@ -24,7 +23,7 @@ h3.warning {
   background-color: #ffff0012;
   margin-top: 7px;
   border-radius: 6px;
-  padding: 20px;
+  padding: 10px 16px;
   border: 3px solid #ff00003b;
   font-weight: 300;
   margin-block-end: 0px;
@@ -119,7 +118,7 @@ input[type="text"], input[type="password"] {
 
 .page {
   position: absolute;
-  top: 10px;
+  top: 66px;
   /* display: flex; */
   /* flex-flow: column nowrap; */
   /* align-items: center; */
@@ -137,8 +136,11 @@ input[type="text"], input[type="password"] {
 }
 
 .subpage.show {
-  display:block;
+  flex-flow: column;
+  align-items: center;
+  display: flex;
 }
+
 .subpage.slide-hide {
   display:none;
 }
@@ -224,8 +226,7 @@ input[type="number"] {
 .lds-ring {
   display: inline-block;
   width: 180px;
-  height: 180px;
-  border-color: #386194 transparent #fff transparent;
+  height: 280px;
 }
 .lds-ring:after {
   content: " ";
@@ -234,9 +235,9 @@ input[type="number"] {
   height: 164px;
   margin: 18px;
   border-radius: 50%;
-  border: 30px solid;
-  border-color: #38619478 transparent #558e758a transparent;
-  animation: lds-dual-ring .75s linear infinite;
+  border: 4px solid;
+  border-color: #afaa2678 #882b2b70 #558e758a #3b4fa942;
+  animation: lds-dual-ring 2s linear infinite;
 }
 @keyframes lds-dual-ring {
   0% {
@@ -292,6 +293,10 @@ input[type="number"] {
     /* font-size: 1em; */
 }
 
+.pct:after {
+    content: "%";
+}
+
 button {
   /* padding: 7px 20px 12px 20px; */
   margin: 15px 20px;
@@ -299,7 +304,7 @@ button {
   font-size: 1.5em;
   font-weight: 250;
   /* line-height: 1.25rem; */
-  border-radius: 18px;
+  border-radius: 16px;
   transition: border-color 0.4s ease, background-color 0.4s ease;
   flex: 1 1;
   /* max-width: 150px; */
@@ -308,16 +313,30 @@ button {
   border: 2px solid #00800029;
   font-stretch: expanded;
   font-variant: all-small-caps;
-  letter-spacing: 0px;
-  padding: 3px 10px 7px 10px;
+  letter-spacing: 3px;
+  padding: 7px 10px 10px 10px;
   line-height: 1em;
   /* overflow: auto; */
   margin: 8px;
+  background-color: #fcf7bab8;
+}
+
+small {
+  line-height: 1em;
+  letter-spacing: 1px;
+  font-size: 0.78em;
+  position: relative;
+  top: 2px;
 }
 
 button:hover:not(:disabled) {
-  border-color: #859032;
-  background-color: #949243c7;
+  border-color: #a4bb27;
+  background-color: #acb341e6;
+}
+
+:focus{
+  border-radius: 28px;
+  border-color: gray;
 }
 
 button:disabled {
@@ -454,3 +473,13 @@ input[type=checkbox] {
 .info-div.connected{
    background-color: #91e68738
 }
+
+button#ok , button#cancel {
+  min-width: 110px;
+}
+
+.top-line {
+  padding-top: 10px;
+  border-top: solid 1px #d3d3d357;
+}
+

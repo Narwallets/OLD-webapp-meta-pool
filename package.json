@@ -1,7 +1,7 @@
 {
   "name": "dapp-diversifying-staking-pool",
   "version": "0.1.0",
-  "description": "get SKASH, yield-farm rewards, enjoy immediate unstake",
+  "description": "get SKASH, harvest G-SKASH, enjoy immediate unstake",
   "author": "luciotato <luciotato@gmail.com>",
   "homepage": "www.narwallets.com",
   "type": "module",
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "serve": "python3 -m http.server"
+    "start": "npm run build && google-chrome-stable http://localhost:8000/DApp & python3 -m http.server"
   },
   "keywords": [
     "NEAR",

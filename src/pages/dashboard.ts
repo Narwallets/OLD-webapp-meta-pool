@@ -5,41 +5,53 @@ import { show as MyAccountPage_show } from "./my-account.js"
 
 import { wallet } from "../wallet-api/wallet.js"
 import { divPool } from "../contracts/div-pool.js"
+import { SSL_OP_NETSCAPE_CHALLENGE_BUG } from "constants"
 
-async function dashboardRefresh(){
+async function dashboardRefresh() {
 
-  d.hideErr()
+  try {
+    d.showWait()
+    d.hideErr()
 
-  let contractInfo = await divPool.get_contract_info(wallet)
+    //let contractInfo = await divPool.get_contract_info()
+    let contractState = await divPool.get_contract_state()
 
-  let dashboardInfo =
-  {
-    total: c.toStringDec(c.yton(contractInfo.total_available)+c.yton(contractInfo.total_for_staking)+c.yton(contractInfo.total_for_unstaking)),
-    historicRewards: c.toStringDec(c.yton(contractInfo.accumulated_staked_rewards)),
-    skash: c.ytonString(contractInfo.total_for_staking),
-    skashSellMarket: 432553,
-    skashBuyMarket: 275424,
-    timeToRewardsString: "7hs 45min",
-    numberOfPools: 22,
-    numberOfAccounts: 22,
-  }
-  //show dashboard info
-  d.applyTemplate("dashboard", "dashboard-template", dashboardInfo)
-
-  document.querySelectorAll("#dashboard .number").forEach(el => {
-    if (el instanceof HTMLDivElement) {
-      el.innerText = el.innerText.replace(".00", "")
+    let dashboardInfo = 
+    {
+      location: divPool.contractAccount,
+      total: c.toStringDec(c.yton(contractState.total_available) + c.yton(contractState.total_for_staking) + c.yton(contractState.total_for_unstaking)),
+      historicRewards: c.toStringDec(c.yton(contractState.accumulated_staked_rewards)),
+      skash: c.ytonString(contractState.total_for_staking),
+      nslp_liquidity: c.ytonString(contractState.nslp_liquidity),
+      nslp_current_discount: contractState.nslp_current_discount_basis_points/100,
+      timeToRewardsString: "7hs 45min",
+      numberOfPools: contractState.staking_pools_count,
+      numberOfAccounts: contractState.accounts_count,
     }
-  })
-  d.showPage("dashboard-page")
+    //show dashboard info
+    d.applyTemplate("dashboard", "dashboard-template", dashboardInfo)
+
+    document.querySelectorAll("#dashboard .number").forEach(el => {
+      if (el instanceof HTMLDivElement) {
+        el.innerText = el.innerText.replace(".00", "")
+      }
+    })
+    d.showPage("dashboard-page")
+  }
+  catch (ex) {
+    d.showErr(ex.message)
+  }
+  finally {
+    d.hideWait()
+  }
 }
 
 //--------------------------
 export async function show() {
 
-  d.onClickId("enter-my-account", myAccountClicked);
   d.onClickId("refresh-dashboard", dashboardRefresh);
-
+  d.onClickId("enter-my-account", myAccountClicked);
+  
   dashboardRefresh()
 
 }
@@ -56,4 +68,5 @@ async function myAccountClicked(ev: Event) {
     d.showErr(ex.message);
   }
 }
+
 
