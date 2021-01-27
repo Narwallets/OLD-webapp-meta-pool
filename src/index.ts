@@ -38,7 +38,7 @@ function walletDisconnected(ev:CustomEvent){
 async function onLoad() {
 
   //TESTING MODE NETWORK or mainnet
-  wallet.network = window.location.href.includes("localhost")||window.location.href.includes("/guildnet/")? "guildnet":"mainnet";
+  wallet.network = "testnet" //"guildnet" //"mainnet"
 
   //init singleton components
   okCancel_init()

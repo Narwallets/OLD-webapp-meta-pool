@@ -24,7 +24,7 @@ function msgReceivedFromContentScript(msg:Record<string,any>){
         const response={dest:"ext", code:"connected", relayer:"wallet-api", version:"0.1", network:wallet.network, err:""}
         if (!msg.data || msg.data.network!=wallet.network){
             //respond back what network we're working in
-            response.err="The web page requires an account on "+wallet.network;
+            response.err="The web page requires a "+wallet.network+" account";
             window.postMessage(response,"*")
             return;
         }

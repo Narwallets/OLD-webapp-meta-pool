@@ -10,7 +10,8 @@ import {SmartContract} from "../wallet-api/base-sc.js"
 import type {ContractInfo} from "./NEP129.js"
 
 //export const CONTRACT_ACCOUNT = "diversifying-pool.guildnet"
-export const CONTRACT_ACCOUNT = "diversifying.pools.guildnet"
+//export const CONTRACT_ACCOUNT = "diversifying.pools.guildnet"
+export const CONTRACT_ACCOUNT = "diversifying.pool.testnet"
 
 //struct returned from get_account_info
 export type GetAccountInfoResult = {
