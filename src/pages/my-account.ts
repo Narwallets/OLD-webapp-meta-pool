@@ -4,7 +4,7 @@ import * as d from "../util/document.js"
 import * as okCancel from "../components/ok-cancel-singleton.js"
 
 import { wallet } from "../wallet-api/wallet.js"
-import { CONTRACT_ACCOUNT, divPool } from "../contracts/div-pool.js"
+import { CONTRACT_ACCOUNT, metaPool } from "../contracts/meta-pool.js"
 
 import { ExtendedAccountData } from "../data/extended-account.js"
 
@@ -90,7 +90,7 @@ async function getAccountData(): Promise<ExtendedAccountData> {
     wallet.checkConnected()
     cachedAccountExpire = 0 //cache disabled
     if (cachedAccountId != wallet.accountId || Date.now() > cachedAccountExpire) {
-        const accInfo = await divPool.get_account_info(wallet.accountId);
+        const accInfo = await metaPool.get_account_info(wallet.accountId);
         cachedAccountData = new ExtendedAccountData(accInfo);
         cachedAccountId = wallet.accountId;
         cachedAccountExpire = Date.now() + 60 * 1 * 1000; //1 min
@@ -173,7 +173,7 @@ async function performDepositAndStake() {
         const amountToStake = d.getNumber("input#deposit-and-stake");
         if (amountToStake < 5) throw Error("Stake at least 5 Near");
 
-        await divPool.deposit_and_stake(amountToStake)
+        await metaPool.deposit_and_stake(amountToStake)
 
         //refresh acc info
         await refreshAccount()
@@ -215,7 +215,7 @@ async function performBuyStake() {
         const amountToStake = d.getNumber("input#buy-stake-amount");
         if (amountToStake < 5) throw Error("Stake at least 5 Near");
 
-        await divPool.buy_stnear_stake(amountToStake)
+        await metaPool.buy_stnear_stake(amountToStake)
 
         //refresh acc info
         await refreshAccount()
@@ -255,7 +255,7 @@ async function sellOKClicked() {
         const info = cachedAccountData
         const stnearToSell = d.getNumber("input#sell-amount")
 
-        let nearToReceiveU128String = await divPool.get_near_amount_sell_stnear(stnearToSell)
+        let nearToReceiveU128String = await metaPool.get_near_amount_sell_stnear(stnearToSell)
         let nearToReceive = Math.trunc(c.yton(nearToReceiveU128String)*100)/100 //on the promised NEAR *TRUNCATE* to 2 decimals
 
         //d.inputById("stake-with-staking-pool").value = selectedAccountData.accountInfo.stakingPool || ""
@@ -284,7 +284,7 @@ async function performSell() {
         const stnearToSell = c.toNum(d.byId("sell-confirmation-stnear").innerText)
         let minExpectedNear=c.toNum(d.byId("sell-confirmation-near").innerText)
 
-        let receivedYoctos = await divPool.sell_stnear(stnearToSell, minExpectedNear)
+        let receivedYoctos = await metaPool.sell_stnear(stnearToSell, minExpectedNear)
         d.showSuccess("Success: received " + c.toStringDec(c.yton(receivedYoctos)) + " NEAR"); //"\u{24c3}")
 
         await refreshAccount()
@@ -343,7 +343,7 @@ async function performUnstake() {
         const amount = c.toNum(d.inputById("unstake-amount").value);
         if (!isValidAmount(amount)) throw Error("Amount is not valid");
 
-        await divPool.unstake(amount)
+        await metaPool.unstake(amount)
 
         d.showSuccess("Unstake requested, you must wait 3-4 epochs (40-54hs) before unstaked-withdrawal")
         
@@ -370,7 +370,7 @@ async function performWithdrawUnstaked() {
         //const amount = c.toNum(d.inputById("withdraw-unstaked-amount").value);
         //if (!isValidAmount(amount)) throw Error("Amount is not valid");
 
-        const recovered_amount = await divPool.finish_unstake()
+        const recovered_amount = await metaPool.finish_unstake()
 
         d.showSuccess(c.toStringDec(c.yton(recovered_amount)) + " withdrew from the pool")
 
@@ -400,7 +400,7 @@ async function performDeposit() {
         const timeoutSecs = (wallet.network == "testnet" ? 20 : 300);
         d.showWait(timeoutSecs) //5 min timeout, give the user time to approve
 
-        await divPool.deposit(nearsToDeposit)
+        await metaPool.deposit(nearsToDeposit)
 
         showButtons()
 
@@ -430,7 +430,7 @@ async function performWithdraw() {
         if (!isValidAmount(amount)) throw Error("Amount should be positive");
         if (amount > cachedAccountData.available) throw Error("max amount is " + c.toStringDec(cachedAccountData.available));
 
-        await divPool.withdraw(amount)
+        await metaPool.withdraw(amount)
 
         showButtons()
 

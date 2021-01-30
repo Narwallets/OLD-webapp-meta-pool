@@ -4,7 +4,7 @@ import * as c from "../util/conversions.js"
 import { show as MyAccountPage_show } from "./my-account.js"
 
 import { wallet } from "../wallet-api/wallet.js"
-import { divPool } from "../contracts/div-pool.js"
+import { metaPool } from "../contracts/meta-pool.js"
 import { SSL_OP_NETSCAPE_CHALLENGE_BUG } from "constants"
 
 async function dashboardRefresh() {
@@ -14,11 +14,11 @@ async function dashboardRefresh() {
     d.hideErr()
 
     //let contractInfo = await divPool.get_contract_info()
-    let contractState = await divPool.get_contract_state()
+    let contractState = await metaPool.get_contract_state()
 
     let dashboardInfo = 
     {
-      location: divPool.contractAccount,
+      location: metaPool.contractAccount,
       total: c.toStringDec(c.yton(contractState.total_available) + c.yton(contractState.total_for_staking) + c.yton(contractState.total_for_unstaking)),
       historicRewards: c.toStringDec(c.yton(contractState.accumulated_staked_rewards)),
       stnear: c.ytonString(contractState.total_for_staking),

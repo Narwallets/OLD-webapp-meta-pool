@@ -4,7 +4,7 @@ import * as d from "../util/document.js"
 import * as okCancel from "../components/ok-cancel-singleton.js"
 
 import { wallet } from "../wallet-api/wallet.js"
-import { divPool } from "../contracts/div-pool.js"
+import { metaPool } from "../contracts/meta-pool.js"
 
 import { ExtendedAccountData } from "../data/extended-account.js"
 
@@ -49,14 +49,14 @@ let currentNSLPFee: number;
 async function getAccountData(): Promise<ExtendedAccountData> {
 
     wallet.checkConnected()
-    const accInfo = await divPool.get_account_info(wallet.accountId);
+    const accInfo = await metaPool.get_account_info(wallet.accountId);
     userAccount = new ExtendedAccountData(accInfo);
     //cachedAccountId = wallet.accountId;
 
-    const lpAccInfo = await divPool.get_account_info("..NSLP..");
+    const lpAccInfo = await metaPool.get_account_info("..NSLP..");
     lpData = new ExtendedAccountData(lpAccInfo);
 
-    currentNSLPFee = await divPool.nslp_get_discount_basis_points(0);
+    currentNSLPFee = await metaPool.nslp_get_discount_basis_points(0);
 
     return userAccount;
 }
@@ -126,7 +126,7 @@ async function performAddLiquidity() {
         const amountToAdd = d.getNumber("input#add-liquidity-amount");
         if (amountToAdd < 100) throw Error("add at least 100 Near");
 
-        await divPool.nslp_add_liquidity(amountToAdd)
+        await metaPool.nslp_add_liquidity(amountToAdd)
 
         //refresh acc info
         await refreshAccount()
@@ -168,7 +168,7 @@ async function performRemoveLiquidity() {
         d.showWait()
 
         const liquidityToRemove = d.getNumber("input#remove-liquidity-amount")
-        await divPool.nslp_remove_liquidity(liquidityToRemove)
+        await metaPool.nslp_remove_liquidity(liquidityToRemove)
         d.showSuccess("Success: removed " + c.toStringDec(liquidityToRemove) + " from the LP"); //"\u{24c3}")
 
         await refreshAccount()
@@ -345,7 +345,7 @@ async function performDeposit() {
         const timeoutSecs = (wallet.network == "testnet" ? 20 : 300);
         d.showWait(timeoutSecs) //5 min timeout, give the user time to approve
 
-        await divPool.deposit(nearsToDeposit)
+        await metaPool.deposit(nearsToDeposit)
 
         showButtons()
 
@@ -375,7 +375,7 @@ async function performWithdraw() {
         if (!isValidAmount(amount)) throw Error("Amount should be positive");
         if (amount > userAccount.available) throw Error("max amount is " + c.toStringDec(userAccount.available));
 
-        await divPool.withdraw(amount)
+        await metaPool.withdraw(amount)
 
         showButtons()
 

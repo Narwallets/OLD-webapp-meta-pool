@@ -9,9 +9,9 @@ import {SmartContract} from "../wallet-api/base-sc.js"
 
 import type {ContractInfo} from "./NEP129.js"
 
-//export const CONTRACT_ACCOUNT = "diversifying-pool.guildnet"
-//export const CONTRACT_ACCOUNT = "diversifying.pools.guildnet"
-export const CONTRACT_ACCOUNT = "diversifying.pool.testnet"
+//export const CONTRACT_ACCOUNT = "meta-pool.guildnet"
+//export const CONTRACT_ACCOUNT = "meta.pools.guildnet"
+export const CONTRACT_ACCOUNT = "meta.pool.testnet"
 
 //struct returned from get_account_info
 export type GetAccountInfoResult = {
@@ -110,7 +110,7 @@ export type ContractState = {
 type yoctos = string
 
 //singleton class
-export class DivPool extends SmartContract {
+export class MetaPool extends SmartContract {
 
     /// returns JSON string according to [NEP-129](https://github.com/nearprotocol/NEPs/pull/129)
     get_contract_info() : Promise<ContractInfo> {
@@ -187,5 +187,5 @@ export class DivPool extends SmartContract {
 }
 
 //singleton export
-export const divPool = new DivPool(CONTRACT_ACCOUNT);
+export const metaPool = new MetaPool(CONTRACT_ACCOUNT);
 

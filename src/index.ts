@@ -8,7 +8,7 @@ import { wallet } from "./wallet-api/wallet.js"
 import { isValidEmail } from "./util/valid.js"
 
 import { show as MyAccountPage_show } from "./pages/my-account.js"
-import { divPool } from "./contracts/div-pool.js"
+import { metaPool } from "./contracts/meta-pool.js"
 
 import {init as okCancel_init} from "./components/ok-cancel-singleton.js"
 

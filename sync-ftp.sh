@@ -1,1 +1,1 @@
-lftp -f ~/.credentials/sync-webapp-divpool-testnet.lftp
+lftp -f ~/.credentials/sync-webapp-metapool-testnet.lftp

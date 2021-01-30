@@ -1,6 +1,6 @@
 import * as c from "../util/conversions.js"
 
-import { GetAccountInfoResult } from "../contracts/div-pool.js";
+import { GetAccountInfoResult } from "../contracts/meta-pool.js";
 
 /**
  * processed contract user account data to show on the DApp
