@@ -1,12 +1,12 @@
 body {
     margin: 0;
     font-size: 11pt;
-    font-family: Ubuntu,"Segoe UI", Roboto, Arimo, Oxygen-Sans, Cantarell, Ubuntu, "Helvetica Neue", -apple-system,  BlinkMacSystemFont,sans-serif!important;
     font-weight: 300;
 }
 
 *, *:before, *:after {
   box-sizing: border-box;
+  font-family: Ubuntu,"Segoe UI", Roboto, Arimo, Oxygen-Sans, Cantarell, Ubuntu, "Helvetica Neue", -apple-system,  BlinkMacSystemFont,sans-serif!important;
 }
 
 .app-header{position: absolute;max-height: 66px;}
@@ -292,6 +292,9 @@ input[type="number"] {
     align-items: center
     /* font-size: 1em; */
 }
+.meta:after {
+    content: "\24c2";
+}
 
 .pct:after {
     content: "%";
@@ -300,9 +303,9 @@ input[type="number"] {
 button {
   /* padding: 7px 20px 12px 20px; */
   margin: 15px 20px;
-  font-weight: 500;
+  /* font-weight: 500; */
   font-size: 1.5em;
-  font-weight: 250;
+  font-weight: 300;
   /* line-height: 1.25rem; */
   border-radius: 16px;
   transition: border-color 0.4s ease, background-color 0.4s ease;
@@ -311,9 +314,9 @@ button {
   /* min-height: 37px; */
   /*min-width: 235px;*/
   border: 2px solid #00800029;
-  font-stretch: expanded;
-  font-variant: all-small-caps;
-  letter-spacing: 3px;
+  /* font-stretch: expanded; */
+  /* font-variant: all-small-caps; */
+  /* letter-spacing: 3px; */
   padding: 7px 10px 10px 10px;
   line-height: 1em;
   /* overflow: auto; */

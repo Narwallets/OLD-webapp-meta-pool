@@ -1,5 +1,5 @@
 //----------------------------------
-// DIVERSIFYING STAKING POOL smart-contract proxy
+// MetaStaking POOL smart-contract proxy
 // https://github.com/Narwallets/diversifying-staking-pool
 //----------------------------------
 
@@ -18,9 +18,9 @@ export type GetAccountInfoResult = {
     account_id: string;
     /// The available balance that can be withdrawn
     available: string; //U128,
-    /// The amount of SKASH owned (computed from the shares owned)
-    skash: string; //U128,
-    /// The amount of rewards (rewards = total_staked - skash_amount) and (total_owned = skash + rewards)
+    /// The amount of stNEAR owned (computed from the shares owned)
+    stnear: string; //U128,
+    /// The amount of rewards (rewards = total_staked - stnear_amount) and (total_owned = stnear + rewards)
     unstaked: string; //U128,
     /// The epoch height when the unstaked was requested
     /// The fund will be locked for NUM_EPOCHS_TO_UNLOCK epochs
@@ -36,22 +36,22 @@ export type GetAccountInfoResult = {
     // These fields works as a car's "trip meter". The user can reset them to zero.
     /// trip_start: (timpestamp in nanoseconds) this field is set at account creation, so it will start metering rewards
     trip_start: string, //U64,
-    /// How many skashs the user had at "trip_start". 
-    trip_start_skash: string, //U128,
+    /// How many stnears the user had at "trip_start". 
+    trip_start_stnear: string, //U128,
     /// how much the user staked since trip start. always incremented
     trip_accum_stakes: string, //U128,
     /// how much the user unstaked since trip start. always incremented
     trip_accum_unstakes: string, //U128,
-    /// to compute trip_rewards we start from current_skash, undo unstakes, undo stakes and finally subtract trip_start_skash
-    /// trip_rewards = current_skash + trip_accum_unstakes - trip_accum_stakes - trip_start_skash;
-    /// trip_rewards = current_skash + trip_accum_unstakes - trip_accum_stakes - trip_start_skash;
+    /// to compute trip_rewards we start from current_stnear, undo unstakes, undo stakes and finally subtract trip_start_stnear
+    /// trip_rewards = current_stnear + trip_accum_unstakes - trip_accum_stakes - trip_start_stnear;
+    /// trip_rewards = current_stnear + trip_accum_unstakes - trip_accum_stakes - trip_start_stnear;
     trip_rewards: string, //U128,
 
     ///NS liquidity pool shares, if the user is a liquidity provider
     nslp_shares: string, //U128,
     nslp_share_value: string, //U128,
 
-    g_skash: string, //U128,
+    meta: string, //U128,
 }
 
 //JSON compatible struct returned from get_contract_state
@@ -95,10 +95,10 @@ export type ContractState = {
     // when someone "unstakes" she "burns" X shares at current price to recoup Y near
     total_stake_shares: string,
 
-    total_g_skash : string, //U128,
+    total_meta : string, //U128,
 
     nslp_liquidity : string, //U128,
-    /// Current discount for immediate unstake (sell SKASH)
+    /// Current discount for immediate unstake (sell stNEAR)
     nslp_current_discount_basis_points: number,
 
     accounts_count: string,//U64,
@@ -154,24 +154,24 @@ export class DivPool extends SmartContract {
         return this.call("finnish_unstake",{})
     }
 
-    //buy skash/stake
-    buy_skash_stake(amount:number) : Promise<void> {
-        return this.call("buy_skash_stake", {"amount":ntoy(amount)})
+    //buy stnear/stake
+    buy_stnear_stake(amount:number) : Promise<void> {
+        return this.call("buy_stnear_stake", {"amount":ntoy(amount)})
     }
 
     //return potential NEARs to receive
-    get_near_amount_sell_skash(skashToSell:number) : Promise<yoctos> {
-        return this.view("get_near_amount_sell_skash", {"skash_to_sell":ntoy(skashToSell)})
+    get_near_amount_sell_stnear(stnearToSell:number) : Promise<yoctos> {
+        return this.view("get_near_amount_sell_stnear", {"stnear_to_sell":ntoy(stnearToSell)})
     }
 
-    //sell skash & return NEARs received
-    sell_skash(skashToSell:number, minExpectedNear:number) : Promise<yoctos> {
-        return this.call("sell_skash", {"skash_to_sell":ntoy(skashToSell), "min_expected_near":ntoy(minExpectedNear)}, 75)
+    //sell stnear & return NEARs received
+    sell_stnear(stnearToSell:number, minExpectedNear:number) : Promise<yoctos> {
+        return this.call("sell_stnear", {"stnear_to_sell":ntoy(stnearToSell), "min_expected_near":ntoy(minExpectedNear)}, 75)
     }
 
     //current fee for liquidity providers
-    nslp_get_discount_basis_points(skashToSell:number) : Promise<number> {
-        return this.view("nslp_get_discount_basis_points", {"skash_to_sell":ntoy(skashToSell)})
+    nslp_get_discount_basis_points(stnearToSell:number) : Promise<number> {
+        return this.view("nslp_get_discount_basis_points", {"stnear_to_sell":ntoy(stnearToSell)})
     }
     
     //add liquidity

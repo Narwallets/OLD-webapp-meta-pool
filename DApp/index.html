@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Diversifying Staking Pool</title>
+    <title>MetaStaking Pool</title>
     <link rel="stylesheet" href="css/hamb.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/index.css">
@@ -15,7 +15,7 @@
         <div class="app-header">
 
             <div class="app-header-contents">
-                <h2>Diversifying Staking Pool</h2>
+                <h2>MetaStaking Pool</h2>
                 <span id="connection-info" class="info-div">Not Connected</span>
             </div>
         </div>
@@ -66,15 +66,15 @@
                         <div class="balance">{historicRewards}</div>
                     </div>
                     <div class="label-value">
-                        <label>SKASHs/Staked</label>
-                        <div class="balance">{skash}</div>
+                        <label>stNEARs/Staked</label>
+                        <div class="balance">{stnear}</div>
                     </div>
                     <div class="label-value">
-                        <label>NEAR/SKASH Liquidity</label>
+                        <label>NEAR/stNEAR Liquidity</label>
                         <div class="balance">{nslp_liquidity}</div>
                     </div>
                     <div class="label-value">
-                        <label>Sell SKASH current discount</label>
+                        <label>Sell stNEAR current discount</label>
                         <div class="pct">{nslp_current_discount}</div>
                     </div>
                     <!--<div class="label-value">
@@ -113,8 +113,8 @@
                         <div class="balance">{available}</div>
                     </div>
                     <div class="label-value">
-                        <label>SKASHs/Staked</label>
-                        <div class="balance">{skash}</div>
+                        <label>stNEARs/Staked</label>
+                        <div class="balance">{stnear}</div>
                     </div>
                     <div class="label-value">
                         <label>Unstaked</label>
@@ -133,8 +133,8 @@
                         <div class="balance">{tripMeterRewards}</div>
                     </div>
                     <div class="label-value">
-                        <label>G-SKASH</label>
-                        <div class="balance">{g_skash}</div>
+                        <label>METAs</label>
+                        <div class="balance meta">{meta}</div>
                     </div>
                 </div>
 
@@ -143,25 +143,29 @@
 
                     <!-- Buttons -->
                     <div id="account-selected-buttons" class="subpage hidden">
+                        <div class="group-title">Deposit</div>
                         <div class="button-group">
-                            <button id="deposit-and-stake">Buy SKASH<br><small>(Deposit & Stake)</small></button>
-                            <button id="sell">Sell SKASH<br><small>(Immediate Unstake)</small></button>
+                            <button id="deposit">Deposit</button>
+                            <button id="deposit-and-stake">Deposit & Buy stNEAR<br><small>(Deposit & Stake)</small></button>
+                        </div>
+                        <div class="group-title">Account</div>
+                        <div class="button-group">
+                            <button id="stake">Buy stNEAR<br><small>(Stake with Available)</small></button>
+                            <button id="sell">Sell stNEAR<br><small>(Immediate Unstake)</small></button>
                         </div>
                         <div class="button-group no-top-line">
-                            <button id="deposit">Deposit</button>
+                            <button id="refresh-account">Refresh</button>
                             <button id="withdraw">Withdraw</button>
                         </div>
-                        <div class="button-group no-top-line">
-                            <button id="stake">Buy SKASH<br><small>(with Available)</small></button>
-                            <button id="refresh-account">Refresh</button>
-                        </div>
+                        <div class="group-title">Classic Unstake</div>
                         <div class="button-group">
                             <button id="start-unstake">Start Unstake<br><small>(and wait 50hs)</small></button>
-                            <button id="complete-unstake">Finish Unstake<br><small>(withdraw to Availabe)</small></button>
+                            <button id="complete-unstake">Finish Unstake<br><small>(move to Availabe)</small></button>
                         </div>
+                        <div class="group-title">Advanced</div>
                         <div class="button-group">
-                            
                             <button id="enter-ns-liquidity-provider">Liquidity Providers</button>
+                            <button id="enter-staking-loans">Validator Loans</button>
                         </div>
                     </div>
 
@@ -173,7 +177,7 @@
                         <h1>Deposit NEAR</h1>
                         <div class="subtitle">
                             <h3 class="success">You need to deposit some NEAR in this smart contract to be able to buy
-                                SKASH/Stake.
+                                stNEAR/Stake.
                                 Your funds are secure and available. You can withdraw your available NEARS at any time.
                             </h3>
                         </div>
@@ -209,7 +213,7 @@
 
                     <!-- subpage DEPOSIT AND STAKE -->
                     <div id="deposit-and-stake" class="subpage hidden">
-                        <h1>Buy SKASH/Stake</h1>
+                        <h1>Buy stNEAR/Stake</h1>
                         <div>
                             <div class="form-field-label">
                                 <label for="deposit-and-stake">
@@ -222,9 +226,9 @@
                         </div>
                     </div>
 
-                    <!-- subpage BUY SKASH/STAKE -->
-                    <div id="buy-stake-skash" class="subpage hidden">
-                        <h1>Buy SKASH/Stake</h1>
+                    <!-- subpage BUY stNEAR/STAKE -->
+                    <div id="buy-stake-stnear" class="subpage hidden">
+                        <h1>Buy stNEAR/Stake</h1>
                         <div>
                             <div class="form-field-label">
                                 <label for="buy-stake-amount">
@@ -237,13 +241,13 @@
                         </div>
                     </div>
 
-                    <!-- subpage SELL SKASH -->
-                    <div id="sell-skash" class="subpage hidden">
-                        <h1>Sell SKASH</h1>
+                    <!-- subpage SELL stNEAR -->
+                    <div id="sell-stnear" class="subpage hidden">
+                        <h1>Sell stNEAR</h1>
                         <div>
                             <div class="form-field-label">
                                 <label for="sell-amount">
-                                    SKASH Amount to sell (Max <span id="sell-skash-max"></span>)
+                                    stNEAR Amount to sell (Max <span id="sell-stnear-max"></span>)
                                 </label>
                                 <div class="form-control">
                                     <input id="sell-amount" type="number">
@@ -252,12 +256,12 @@
                         </div>
                     </div>
 
-                    <!-- subpage SELL SKASH/STAKE CONFIRM DISCOUNTED -->
-                    <div id="sell-skash-confirmation" class="subpage hidden">
-                        <h1>Confirm SKASH Sell</h1>
+                    <!-- subpage SELL stNEAR/STAKE CONFIRM DISCOUNTED -->
+                    <div id="sell-stnear-confirmation" class="subpage hidden">
+                        <h1>Confirm stNEAR Sell</h1>
                         <div class="subtitle">
                             <div id="original-sell-confirmation-near" class="hidden"></div>
-                            <h3 class="warning">Sell <span id="sell-confirmation-skash"></span> SKASH
+                            <h3 class="warning">Sell <span id="sell-confirmation-stnear"></span> stNEAR
                                 to obtain at least <span id="sell-confirmation-near"></span> NEAR ?</h3>
                         </div>
                         <br>
@@ -287,7 +291,7 @@
                     </div>
 
                     <!-- subpage UNSTAKE CONFIRMATION -->
-                    <div id="sell-skash-confirmation" class="subpage hidden">
+                    <div id="sell-stnear-confirmation" class="subpage hidden">
                         <h1>Confirm Unstake</h1>
                         <div class="subtitle">
                             <h3 class="warning">Warning: There is a non-cancellable waiting period of 36-48hs for the
@@ -306,7 +310,7 @@
             </div>
 
             <!-- ----------------------------------------------
-                NEAR/SKASH LIQUIDITY POOL PAGE
+                NEAR/stNEAR LIQUIDITY POOL PAGE
             --------------------------------------------------- -->
             <div id="nslp-page" class="nslp-page page slide-hide hidden">
                 <header class="back-link">Back to My Account</header>
@@ -324,8 +328,8 @@
                         <div class="balance">{available}</div>
                     </div>
                     <div class="label-value">
-                        <label>SKASHs in the Pool</label>
-                        <div class="balance">{skash}</div>
+                        <label>stNEARs in the Pool</label>
+                        <div class="balance">{stnear}</div>
                     </div>
                     <div class="label-value">
                         <label>Unstaked in the Pool</label>
@@ -368,7 +372,7 @@
                         <h1>Add NEAR liquidity</h1>
                         <div class="subtitle">
                             <h3 class="success">Adding liquidity you'll receive a share of the liquidity pool. 
-                                On each operation you'll get a fee and also G-SKASH tokens
+                                On each operation you'll get a fee and also G-stNEAR tokens
                             </h3>
                         </div>
                         <div class="deposit-form">
@@ -388,7 +392,7 @@
                         <h1>Remove Liquidty</h1>
                         <div class="subtitle">
                             <h3 class="success">You will burn shares from the liquidity pool. 
-                                You'll receive SKASH (staked NEAR), unstaked near (waiting period)
+                                You'll receive stNEAR (staked NEAR), unstaked near (waiting period)
                                 and finally NEAR in proportion to the shares you're burning.</h3>
                         </div>
                         <div class="remove-liquidity-form">

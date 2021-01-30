@@ -65,7 +65,7 @@ function showAccountData() {
 
     const templateData=Object.assign({
         user:userAccount,
-        poolName:"NEAR/SKASH",
+        poolName:"NEAR/stNEAR",
         discount:currentNSLPFee/100,
         yourSharePct: lpData.nslp_shares==0? 0 : Math.round(userAccount.nslp_shares/lpData.nslp_shares  * 10000)/100,
         }, lpData)
@@ -150,7 +150,7 @@ function removeLiquidityClick(){
     try {
 
         const acc = userAccount
-        d.byId("remove-liquidity-max").innerText = c.toStringDec(acc.skash)
+        d.byId("remove-liquidity-max").innerText = c.toStringDec(acc.stnear)
         ifWalletConnectedShowSubPage("remove-liquidity", performRemoveLiquidity)
 
     } catch (ex) {
@@ -229,7 +229,7 @@ async function unstakeClicked() {
         }
         else {
             d.inputById("radio-unstake").checked = true
-            amountForTheField = userAccount.skash
+            amountForTheField = userAccount.stnear
             if (amountForTheField == 0) throw Error("No funds on the pool")
         }
         if (info.type != "lock.c") optionWU.show()

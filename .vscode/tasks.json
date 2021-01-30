@@ -21,13 +21,15 @@
 				"isDefault": true,
 			},
 			"label": "npm: build",
-			"detail": "plus-ts build"
+			"detail": "debug build"
 		},
 		{
-			"type": "typescript",
-			"tsconfig": "tsconfig.json",
+			"label": "npm: build-release",
+			"detail": "release build",
 			"group": "build",
 			"problemMatcher": ["$tsc"],
+			"type": "npm",
+			"script": "build-release",
 		  }
 	]
 }

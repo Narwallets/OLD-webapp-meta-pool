@@ -52,7 +52,7 @@ function slippageDisplay(slippage:number){
 
     d.qs("#sell-slippage-display").innerText = slippage + ""
 
-    const sellSkash = c.toNum(d.qs("#sell-confirmation-skash").innerText)
+    const sellstnear = c.toNum(d.qs("#sell-confirmation-stnear").innerText)
     const originalNear=c.toNum(d.qs("#original-sell-confirmation-near").innerText)
     const newNear = originalNear * (1-slippage/100)
     d.qs("#sell-confirmation-near").innerText = c.toStringDec(newNear)
@@ -197,7 +197,7 @@ function stakeAvailabeClicked() {
 
         const acc = cachedAccountData
         d.byId("buy-stake-max").innerText = c.toStringDec(acc.available)
-        ifWalletConnectedShowSubPage("buy-stake-skash", performBuyStake)
+        ifWalletConnectedShowSubPage("buy-stake-stnear", performBuyStake)
         d.inputById("buy-stake-amount").value = c.toStringDec(acc.available)
 
     } catch (ex) {
@@ -215,7 +215,7 @@ async function performBuyStake() {
         const amountToStake = d.getNumber("input#buy-stake-amount");
         if (amountToStake < 5) throw Error("Stake at least 5 Near");
 
-        await divPool.buy_skash_stake(amountToStake)
+        await divPool.buy_stnear_stake(amountToStake)
 
         //refresh acc info
         await refreshAccount()
@@ -239,9 +239,9 @@ function sellClicked(){
     try {
 
         const acc = cachedAccountData
-        d.byId("sell-skash-max").innerText = c.toStringDec(acc.skash)
+        d.byId("sell-stnear-max").innerText = c.toStringDec(acc.stnear)
 
-        ifWalletConnectedShowSubPage("sell-skash", sellOKClicked)
+        ifWalletConnectedShowSubPage("sell-stnear", sellOKClicked)
 
     } catch (ex) {
         d.showErr(ex.message)
@@ -253,19 +253,19 @@ function sellClicked(){
 async function sellOKClicked() {
     try {
         const info = cachedAccountData
-        const skashToSell = d.getNumber("input#sell-amount")
+        const stnearToSell = d.getNumber("input#sell-amount")
 
-        let nearToReceiveU128String = await divPool.get_near_amount_sell_skash(skashToSell)
+        let nearToReceiveU128String = await divPool.get_near_amount_sell_stnear(stnearToSell)
         let nearToReceive = Math.trunc(c.yton(nearToReceiveU128String)*100)/100 //on the promised NEAR *TRUNCATE* to 2 decimals
 
         //d.inputById("stake-with-staking-pool").value = selectedAccountData.accountInfo.stakingPool || ""
-        d.byId("sell-confirmation-skash").innerText = c.toStringDec(skashToSell)
+        d.byId("sell-confirmation-stnear").innerText = c.toStringDec(stnearToSell)
         d.byId("original-sell-confirmation-near").innerText = c.toStringDec(nearToReceive)
 
         d.inputById("sell-slippage").value="5"; //0-10 => 0%-1%
         slippageDisplay(0.5)
 
-        ifWalletConnectedShowSubPage("sell-skash-confirmation", performSell)
+        ifWalletConnectedShowSubPage("sell-stnear-confirmation", performSell)
 
     } catch (ex) {
         d.showErr(ex.message)
@@ -281,10 +281,10 @@ async function performSell() {
         okCancel.disable()
         d.showWait()
 
-        const skashToSell = c.toNum(d.byId("sell-confirmation-skash").innerText)
+        const stnearToSell = c.toNum(d.byId("sell-confirmation-stnear").innerText)
         let minExpectedNear=c.toNum(d.byId("sell-confirmation-near").innerText)
 
-        let receivedYoctos = await divPool.sell_skash(skashToSell, minExpectedNear)
+        let receivedYoctos = await divPool.sell_stnear(stnearToSell, minExpectedNear)
         d.showSuccess("Success: received " + c.toStringDec(c.yton(receivedYoctos)) + " NEAR"); //"\u{24c3}")
 
         await refreshAccount()

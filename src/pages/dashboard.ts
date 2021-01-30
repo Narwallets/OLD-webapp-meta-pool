@@ -21,7 +21,7 @@ async function dashboardRefresh() {
       location: divPool.contractAccount,
       total: c.toStringDec(c.yton(contractState.total_available) + c.yton(contractState.total_for_staking) + c.yton(contractState.total_for_unstaking)),
       historicRewards: c.toStringDec(c.yton(contractState.accumulated_staked_rewards)),
-      skash: c.ytonString(contractState.total_for_staking),
+      stnear: c.ytonString(contractState.total_for_staking),
       nslp_liquidity: c.ytonString(contractState.nslp_liquidity),
       nslp_current_discount: contractState.nslp_current_discount_basis_points/100,
       timeToRewardsString: "7hs 45min",

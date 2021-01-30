@@ -102,7 +102,7 @@ export function showByClass(id:string, className:string) {
   //clear all input fields
   toShow.querySelectorAll("input").forEach((item) => item.value = "") 
 
-  //move ok-cancel common component to placeholder of current page
+  //move ok-cancel singleton component to placeholder of current page
   const okCancelCommon=document.querySelector("#ok-cancel")
   if (okCancelCommon) {
     toShow.querySelector("#ok-cancel-placeholder")?.appendChild(okCancelCommon)

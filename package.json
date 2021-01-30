@@ -12,6 +12,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "build-release": "rm -rf Dapp/dist && tsc --build -verbose tsconfig-release.json",
     "start": "npm run build && google-chrome-stable http://localhost:8000/DApp & python3 -m http.server"
   },
   "keywords": [
