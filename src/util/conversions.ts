@@ -40,11 +40,12 @@ export function ntoy(n: number) {
 //------ conversions number -> display string
 //----------------------------------
 /**
- * Formats a number in NEAR to a string with commas and 2 decimal places
+ * Formats a number in NEAR to a string with commas and 2 decimal places .- 
+ * we migth extend to 4 because yton rounds to that and NEAR migth increase in price
  * @param {number} n 
  */
 export function toStringDec(n:number) {
-    const text1e4N = Math.round(n * 100).toString().padStart(3, "0");
+    const text1e4N = Math.trunc(n * 100).toString().padStart(3, "0");
     const withDecPoint =text1e4N.slice(0, -2) + "." + text1e4N.slice(-2); 
     return addCommas(withDecPoint);
 }
