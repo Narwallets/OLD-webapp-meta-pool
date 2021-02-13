@@ -1,14 +1,14 @@
 {
-  "name": "dapp-diversifying-staking-pool",
+  "name": "webapp-meta-pool",
   "version": "0.1.0",
-  "description": "get SKASH, harvest G-SKASH, enjoy immediate unstake",
+  "description": "get stNEAR, harvest $META, enjoy immediate unstake, provide liquidity and earn fees",
   "author": "luciotato <luciotato@gmail.com>",
   "homepage": "www.narwallets.com",
   "type": "module",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Narwallets/dapp-diversifying-staking-pool.git"
+    "url": "git+https://github.com/Narwallets/webapp-meta-pool.git"
   },
   "scripts": {
     "build": "tsc",
@@ -17,6 +17,8 @@
   },
   "keywords": [
     "NEAR",
+    "stNEAR",
+    "META",
     "staking",
     "pool",
     "open source",
