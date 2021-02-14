@@ -107,6 +107,31 @@ export type ContractState = {
     staking_pools_count: string, //U64, 
 }
 
+export type VLoanInfo = {
+    //total requested 
+    amount_requested:string, //u128
+    //staking pool owner
+    staking_pool_owner_id:string,
+    //staking pool beneficiary
+    staking_pool_account_id:string,
+    //more information 
+    information_url: string,
+    //committed fee
+    //The validator commits to have their fee at x%, x amount of epochs
+    //100 => 1% , 250=>2.5%, etc. -- max: 10000=>100%
+    commited_fee: number, //u16,
+    commited_fee_duration: number,// u16,
+
+    //status: set by requester: draft, active / set by owner: rejected, accepted, implemented
+    status_text: string,
+    status: number, // u8,
+    //set by owner. if status=accepted how much will be taken from the user account as fee to move to status=implemented
+    loan_fee:string, // u128,
+
+    //EpochHeight where the request was activated status=active
+    activated_epoch_height: string // u64 EpochHeight 
+}
+
 type yoctos = string
 
 //singleton class
@@ -183,9 +208,41 @@ export class MetaPool extends SmartContract {
     nslp_remove_liquidity(amount:number) : Promise<void> {
         return this.call("nslp_remove_liquidity", {"amount":ntoy(amount)}, 100)
     }
-    
+
+    //--------------
+    //VLOAN REQUESTS
+    //--------------
+    get_vloan_request(account_id:string): Promise<VLoanInfo> {
+        return this.view("get_vloan_request",{account_id:account_id})
+    }
+
+    set_vloan_request(amount_requested:number, staking_pool_account_id:string, 
+                commited_fee:number, commited_fee_duration:number, 
+                information_url: String): Promise<void> 
+        {
+        return this.call("set_vloan_request",{
+            amount_requested:ntoy(amount_requested), 
+            staking_pool_account_id:staking_pool_account_id,
+            commited_fee:commited_fee*100,  //send in basis points
+            commited_fee_duration:commited_fee_duration, 
+            information_url: information_url });
+    }
+
+    vloan_activate(feeNears:number): Promise<void> {
+        return this.call("vloan_activate",{},25,feeNears)
+    }
+    vloan_convert_back_to_draft(): Promise<void> {
+        return this.call("vloan_convert_back_to_draft",{})
+    }
+    vloan_take(): Promise<void> {
+        return this.call("vloan_take",{})
+    }
+    vloan_delete(): Promise<void> {
+        return this.call("vloan_delete",{})
+    }
+
+
 }
 
 //singleton export
 export const metaPool = new MetaPool(CONTRACT_ACCOUNT);
-

@@ -2,6 +2,7 @@ import * as c from "../util/conversions.js"
 import * as d from "../util/document.js"
 
 import * as okCancel from "../components/ok-cancel-singleton.js"
+import {ifWalletConnectedShowSubPage} from "../util/common.js"
 
 import { wallet } from "../wallet-api/wallet.js"
 import { CONTRACT_ACCOUNT, metaPool } from "../contracts/meta-pool.js"
@@ -9,7 +10,9 @@ import { CONTRACT_ACCOUNT, metaPool } from "../contracts/meta-pool.js"
 import { ExtendedAccountData } from "../data/extended-account.js"
 
 import {show as Dashboard_show} from "./dashboard.js"
-import { show as LiquidityProvider_show } from "./liquidity-provider.js"
+import {show as LiquidityProvider_show } from "./liquidity-provider.js"
+import {show as VLoan_show } from "./validator-loan.js"
+
 
 import type { AnyElement, ClickHandler } from "../util/document.js"
 import { isValidAmount } from "../util/valid.js"
@@ -33,6 +36,8 @@ function init() {
 
     d.onClickId("refresh-account", refreshAccountClicked);
     d.onClickId("enter-ns-liquidity-provider", liquidityProviderClicked);
+    d.onClickId("enter-vloan", vLoanClicked);
+    
 
     d.byId("sell-slippage").addEventListener("input", sellSlippageMoved);
     
@@ -120,34 +125,16 @@ type StateResult = {
 }
 
 
-function onCancelHandler(){
-    showButtons()
-}
-
-function ifWalletConnectedShowSubPage(subPageId: string, onOKHandler: ClickHandler) {
-    try {
-        d.hideErr()
-        wallet.checkConnected()
-        d.showSubPage(subPageId)
-        okCancel.show_onOK(onOKHandler,onCancelHandler)
-    }
-    catch (ex) {
-        d.showErr(ex.message)
-    }
-
-}
-
-
 async function withdrawClicked() {
     await forceRefreshAccountData()
-    ifWalletConnectedShowSubPage('withdraw-subpage', performWithdraw)
+    ifWalletConnectedShowSubPage('withdraw-subpage', performWithdraw, showButtons)
     d.byId("max-withdraw").innerText = c.toStringDec(cachedAccountData.available)
 }
 
 
 //----------------------
 function depositClicked() {
-    ifWalletConnectedShowSubPage('deposit-subpage', performDeposit)
+    ifWalletConnectedShowSubPage('deposit-subpage', performDeposit, showButtons)
     const amountText = d.qs("#deposit-amount")
     amountText.value = "100"
     amountText.el.focus()
@@ -158,7 +145,7 @@ function depositClicked() {
 function depositAndStakeClicked() {
     try {
 
-        ifWalletConnectedShowSubPage("deposit-and-stake", performDepositAndStake)
+        ifWalletConnectedShowSubPage("deposit-and-stake", performDepositAndStake, showButtons)
 
     } catch (ex) {
         d.showErr(ex.message)
@@ -197,7 +184,7 @@ function stakeAvailabeClicked() {
 
         const acc = cachedAccountData
         d.byId("buy-stake-max").innerText = c.toStringDec(acc.available)
-        ifWalletConnectedShowSubPage("buy-stake-stnear", performBuyStake)
+        ifWalletConnectedShowSubPage("buy-stake-stnear", performBuyStake, showButtons)
         d.inputById("buy-stake-amount").value = c.toStringDec(acc.available)
 
     } catch (ex) {
@@ -241,7 +228,7 @@ function sellClicked(){
         const acc = cachedAccountData
         d.byId("sell-stnear-max").innerText = c.toStringDec(acc.stnear)
 
-        ifWalletConnectedShowSubPage("sell-stnear", sellOKClicked)
+        ifWalletConnectedShowSubPage("sell-stnear", sellOKClicked, showButtons)
 
     } catch (ex) {
         d.showErr(ex.message)
@@ -265,7 +252,7 @@ async function sellOKClicked() {
         d.inputById("sell-slippage").value="5"; //0-10 => 0%-1%
         slippageDisplay(0.5)
 
-        ifWalletConnectedShowSubPage("sell-stnear-confirmation", performSell)
+        ifWalletConnectedShowSubPage("sell-stnear-confirmation", performSell, showButtons)
 
     } catch (ex) {
         d.showErr(ex.message)
@@ -305,7 +292,7 @@ async function performSell() {
 async function unstakeClicked() {
     try {
         d.showWait()
-        ifWalletConnectedShowSubPage("unstake", performUnstake)
+        ifWalletConnectedShowSubPage("unstake", performUnstake, showButtons)
 
     } catch (ex) {
         d.showErr(ex.message)
@@ -464,7 +451,7 @@ async function DeleteAccountClicked() {
         d.showSubPage("account-selected-delete")
         //d.inputById("send-balance-to-account-name").value = selectedAccountData.accountInfo.ownerId || ""
 
-        okCancel.show_onOK(DeleteAccount, onCancelHandler)
+        okCancel.show_onOK(DeleteAccount, showButtons)
 
     }
     catch (ex) {
@@ -564,4 +551,15 @@ async function liquidityProviderClicked(ev: Event) {
     d.showErr(ex.message);
   }
 }
+
+async function vLoanClicked(ev: Event) {
+    try {
+      wallet.checkConnected()
+      VLoan_show()
+    }
+    catch (ex) {
+      d.showErr(ex.message);
+    }
+  }
+  
 

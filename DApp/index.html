@@ -13,11 +13,8 @@
     <div class="app">
 
         <div class="app-header">
-
-            <div class="app-header-contents">
-                <h2>MetaStaking Pool</h2>
-                <span id="connection-info" class="info-div">Not Connected</span>
-            </div>
+            <h2>MetaStaking Pool</h2>
+            <span id="connection-info" class="info-div">Not Connected</span>
         </div>
 
         <div class="app-contents">
@@ -165,7 +162,7 @@
                         <div class="group-title">Advanced</div>
                         <div class="button-group">
                             <button id="enter-ns-liquidity-provider">Liquidity Providers</button>
-                            <button id="enter-staking-loans">Validator Loans</button>
+                            <button id="enter-vloan">Validator Staking Loans</button>
                         </div>
                     </div>
 
@@ -187,7 +184,7 @@
                                     Amount in NEAR to deposit
                                 </label>
                                 <div class="form-control">
-                                    <input id="deposit-amount" type="number">
+                                    <input id="deposit-amount" inputmode="numeric">
                                 </div>
                             </div>
                         </div>
@@ -205,7 +202,7 @@
                                     Amount in NEAR to withdraw (Max <span id="max-withdraw"></span>)
                                 </label>
                                 <div class="form-control">
-                                    <input id="withdraw-amount" type="number">
+                                    <input id="withdraw-amount" inputmode="numeric">
                                 </div>
                             </div>
                         </div>
@@ -220,7 +217,7 @@
                                     Amount in NEAR
                                 </label>
                                 <div class="form-control">
-                                    <input id="deposit-and-stake" type="number">
+                                    <input id="deposit-and-stake" inputmode="numeric">
                                 </div>
                             </div>
                         </div>
@@ -235,7 +232,7 @@
                                     Amount in NEAR (Max <span id="buy-stake-max"></span>)
                                 </label>
                                 <div class="form-control">
-                                    <input id="buy-stake-amount" type="number">
+                                    <input id="buy-stake-amount" inputmode="numeric">
                                 </div>
                             </div>
                         </div>
@@ -250,7 +247,7 @@
                                     stNEAR Amount to sell (Max <span id="sell-stnear-max"></span>)
                                 </label>
                                 <div class="form-control">
-                                    <input id="sell-amount" type="number">
+                                    <input id="sell-amount" inputmode="numeric">
                                 </div>
                             </div>
                         </div>
@@ -285,7 +282,7 @@
                                 Amount to unstake
                             </label>
                             <div class="form-control">
-                                <input id="unstake-amount" type="number">
+                                <input id="unstake-amount" inputmode="numeric">
                             </div>
                         </div>
                     </div>
@@ -314,6 +311,7 @@
             --------------------------------------------------- -->
             <div id="nslp-page" class="nslp-page page slide-hide hidden">
                 <header class="back-link">Back to My Account</header>
+                <h2 class="page-header">NEAR/stNEAR Liquidity Pool</h2>
                 <div id="nslp-info" class="nslp-info">
                 </div>
 
@@ -372,7 +370,7 @@
                         <h1>Add NEAR liquidity</h1>
                         <div class="subtitle">
                             <h3 class="success">Adding liquidity you'll receive a share of the liquidity pool. 
-                                On each operation you'll get a fee and also G-stNEAR tokens
+                                On each operation you'll get a fee and also $META tokens
                             </h3>
                         </div>
                         <div class="deposit-form">
@@ -381,7 +379,7 @@
                                     Amount in NEAR to add (Max <span id="add-liquidity-max"></span>)
                                 </label>
                                 <div class="form-control">
-                                    <input id="add-liquidity-amount" type="number">
+                                    <input id="add-liquidity-amount" inputmode="numeric">
                                 </div>
                             </div>
                         </div>
@@ -401,13 +399,174 @@
                                     Amount in NEAR to remove (Max <span id="remove-liquidity-max"></span>)
                                 </label>
                                 <div class="form-control">
-                                    <input id="remove-liquidity-amount" type="number">
+                                    <input id="remove-liquidity-amount" inputmode="numeric">
                                 </div>
                             </div>
                         </div>
                     </div>
 
                 </div>
+                <div id="ok-cancel-placeholder" class="footer"></div>
+
+            </div>
+
+            <!-- ----------------------------------------------
+                VALIDATOR LOANS PAGE
+            --------------------------------------------------- -->
+            <div id="vloan-page" class="vloan-page page slide-hide hidden">
+                <header class="back-link">Back to My Account</header>
+                <h2 class="page-header">Validator Stake Loan Request</h2>
+                <div class="subtitle">
+                    <h3 class="success">
+                    <p>This page allows you to add your signature to confirm a validator loan request, but you don't need to sign this transaction to start a request process. 
+                    Start the process by asking at <a target="_blank" href="https://discord.gg/BJq6mxywwK">Narwallets' discord</a> <b>#meta-val-stake-loans</b> channel.
+                    </p>
+                </div>
+                <div id="vloan-info" class="vloan-info">
+                </div>
+
+                <!-- Template -->
+                <div id="vloan-template" class="label-value-content hidden">
+                    <div class="label-value  top-line">
+                        <label>Status</label>
+                        <div class="text">{status_text}</div>
+                    </div>
+                    <div class="label-value top-line">
+                        <label>Staking pool's Owner Id</label>
+                        <div class="account">{staking_pool_owner_id}</div>
+                    </div>
+                    <div class="label-value top-line">
+                        <label>Staking pool</label>
+                        <div class="account">{raw.staking_pool_account_id}</div>
+                    </div>
+                    <div id="available-balance-line" class="label-value">
+                        <label>Amount Requested</label>
+                        <div class="balance">{amount_requested_near}</div>
+                    </div>
+                    <div class="label-value">
+                        <label>Information URL</label>
+                        <div class="text">{raw.information_url}</div>
+                    </div>
+                    <div class="label-value top-line">
+                        <label>Commited Fee %</label>
+                        <div class="pct">{commited_fee}</div>
+                    </div>
+                    <div class="label-value">
+                        <label>Commited Fee Duration (Epochs)</label>
+                        <div class="number">{raw.commited_fee_duration}</div>
+                    </div>
+                    <div class="label-value top-line">
+                        <label>Loan Fee</label>
+                        <div class="balance">{loan_fee_near}</div>
+                    </div>
+                    
+                </div>
+
+
+                <div id="vloan-supages" class="footer">
+
+                    <!-- Buttons -->
+                    <div id="vloan-buttons" class="subpage hidden">
+                        <div class="button-group no-top-line">
+                            <button id="vloan-modify-request">Modify Request Data</button>
+                            <button id="vloan-activate-request">Activate</button>
+                            <button id="vloan-deactivate-request">Convert back to Draft</button>
+                        </div>
+                        <div class="button-group no-top-line">
+                            <button id="vloan-take">Accept Fee & Take Loan</button>
+                        </div>
+                        <div class="button-group no-top-line">
+                            <button id="vloan-delete">Delete Loan Request</button>
+                        </div>
+                    </div>
+
+                    <!-- SUBPAGES -->
+
+                    <div id="vloan-activate" class="subpage hidden">
+                        <h2>Activate Request</h2>
+                        <div class="subtitle">
+                            <h3 class="success">
+                            <p>Activating the request will start the in-chain approval process.
+                            Activating a request has a <b>5N fee</b> and you won't be able to modify data or deactivate for 2 Epochs (24hs).
+                            </p>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div id="vloan-deactivate" class="subpage hidden">
+                        <h2>Convert back to DRAFT</h2>
+                        <div class="subtitle">
+                            <h3 class="success">
+                            <p>If the request is active, you can convert back to DRAFT status only after 2 Epochs (72hs) from the activation. 
+                            </p>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div id="vloan-delete" class="subpage hidden">
+                        <h2>Delete Staking Loan Request</h2>
+                        <div class="subtitle">
+                            <h3 class="success">
+                            <p>Click OK to delete the Staking Loan Request
+                            </p>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div id="vloan-take" class="subpage hidden">
+                        <h2>Deactivate Request</h2>
+                        <div class="subtitle">
+                            <h3 class="success">
+                            <p>If your request is APPROVED, by clicking OK <b>you will pay the Loan Fee</b> and staking will start. 
+                                Click OK if you agree.
+                            </p>
+                            </h3>
+                        </div>
+                    </div>
+
+
+                    <!-- vloan-modify-request -->
+                    <div id="vloan-modify" class="subpage hidden">
+                        <h2>Modify Request</h2>
+                        <div class="modify-form">
+                            <div class="form-field-label">
+                                <label for="staking_pool_account_id">Staking Pool Account Id</label>
+                                <div class="form-control"><input id="staking_pool_account_id" type="text"></div>
+                            </div>
+                            <div class="form-field-label">
+                                <label for="vloan_amount_near">Amount in NEAR Staking requested</label>
+                                <div class="form-control"><input id="vloan_amount_near" inputmode="numeric"></div>
+                            </div>
+                            <div class="form-field-label">
+                                <label for="information_url">Information URL</label>
+                                <div class="form-control"><input id="information_url" type="text"></div>
+                            </div>
+                            <div class="form-field-label">
+                                <label for="commited_fee">Commited Fee</label>
+                                <div class="form-control"><input id="commited_fee" inputmode="numeric"></div>
+                            </div>
+                            <div class="form-field-label">
+                                <label for="commited_fee">Commited Fee Duration (Epochs)</label>
+                                <div class="form-control"><input id="commited_fee_duration" inputmode="numeric"></div>
+                            </div>
+                            <!--<div class="form-field-label">
+                                <label for="status">Status</label>
+                                <div class="form-control">
+                                    <select name="status" id="vloan-status">
+                                        <option value="0">DRAFT</option>
+                                        <option value="1">ACTIVE</option>
+                                        <option value="2">REJECTED</option>
+                                        <option value="3">ACCEPTED</option>
+                                        <option value="4">EXECUTED</option>
+                                      </select>
+                                    </div>
+                            </div>
+                            -->
+                        </div>
+                    </div>
+
+                </div>
+
                 <div id="ok-cancel-placeholder" class="footer"></div>
 
             </div>

@@ -13,15 +13,20 @@
 .app-header {
     background: #f2f3f4;
     z-index: 12;
-    display: flex;
-    flex: 0 0 auto;
+    display: block;
+    /* flex: 0 0 auto; */
     padding-top: 10px;
     padding-bottom: 10px;
-    flex-direction: row;
-    align-items: center;
-    justify-items: flex-end;
-    max-height: 52px;
-    width: 100%;
+    /* flex-direction: row; */
+    /* align-items: center; */
+    /* justify-items: flex-end; */
+    height: 54px;
+    /* width: 100%; */
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin: 0px;
+    padding: 0px;
 }
 
 .app-header-contents {
@@ -92,7 +97,7 @@ li {
 }
 .subtitle {
     text-align: center;
-    max-width: 700px;
+    margin: 0px 40px;
 }
 
 .btn {
@@ -141,15 +146,11 @@ h2 {
     color: #1d1d1d;
     font-size: 2.1em;
     font-weight: 250;
+    min-width: 500px;
 }
 .app-header h2 {
-    font-size: 2.1em;
-    font-weight: 250;
-    padding: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    flex: 1 1;
-    margin-left: 80px;
+    text-align: left;
+    margin-left: 20px;
 }
 
 h3 {
@@ -157,6 +158,12 @@ h3 {
     font-weight: 250;
     font-size: 1.2em;
     line-height: 1.5em;
+}
+
+p {
+    margin-left:10%;
+    margin-right:10%;
+    /* text-align: center; */
 }
 
 .contents-header {
@@ -534,7 +541,11 @@ h3 {
  }
 .account{
    background-color: #d2eaf9 !important;
-  
+   word-break: break-word;
+   max-width: 322px;
+}
+.text {
+    background-color: #d1fffc !important;
 }
 .small-labels {
     font-size: 0.75em !important;
@@ -662,7 +673,7 @@ button.ultrabig{
     margin-bottom: 22px;
     line-height: 1.4em;
 }
-.options-list div input[type="number"]{
+.options-list div input[inputmode="numeric"]{
     max-width: 5em;
     text-align: center;
     padding: 5px;

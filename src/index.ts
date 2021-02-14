@@ -13,13 +13,14 @@ import { metaPool } from "./contracts/meta-pool.js"
 import {init as okCancel_init} from "./components/ok-cancel-singleton.js"
 
 function connectionInfoClicked(){
-  const div = d.byId("connection-info")
   if (!wallet.isConnected) wallet.connectionHelp()
 }
 
 function walletConnected(ev:CustomEvent){
   const div = d.byId("connection-info");
-  div.innerText = ev.detail.data.accountId;
+  let accName = ev.detail.data.accountId as string
+  if (accName.length>22) accName=accName.slice(0,10)+".."+accName.slice(-10);
+  div.innerText = accName;
   div.classList.add("connected")
   d.showSuccess("wallet connected")
   Dashboard.show()
