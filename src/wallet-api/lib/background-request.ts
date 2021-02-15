@@ -1,4 +1,4 @@
-import {wallet} from "../wallet.js"
+import {wallet,semver} from "../wallet.js"
 
 //----------------------------------------
 //-- LISTEN to "message" from injected content script
@@ -21,9 +21,12 @@ function msgReceivedFromContentScript(msg:Record<string,any>){
 
     //handle connect and disconnect
     if (msg.code=="connect"){
+        //capture wallet version, default 1.0.2
+        wallet.version=msg.data?.version||semver(1,0,2);
+        //prepare response
         const response={dest:"ext", code:"connected", relayer:"wallet-api", version:"0.1", network:wallet.network, err:""}
-        if (!msg.data || msg.data.network!=wallet.network){
-            //respond back what network we're working in
+        if (wallet.network && (!msg.data || msg.data.network!=wallet.network)){
+            //respond back what network we require
             response.err="The web page requires a "+wallet.network+" account";
             window.postMessage(response,"*")
             return;

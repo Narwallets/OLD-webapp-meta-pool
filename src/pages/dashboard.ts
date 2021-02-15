@@ -5,7 +5,6 @@ import { show as MyAccountPage_show } from "./my-account.js"
 
 import { wallet } from "../wallet-api/wallet.js"
 import { metaPool } from "../contracts/meta-pool.js"
-import { SSL_OP_NETSCAPE_CHALLENGE_BUG } from "constants"
 
 async function dashboardRefresh() {
 

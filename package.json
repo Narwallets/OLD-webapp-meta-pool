@@ -11,9 +11,9 @@
     "url": "git+https://github.com/Narwallets/webapp-meta-pool.git"
   },
   "scripts": {
-    "build": "tsc",
-    "build-release": "rm -rf Dapp/dist && tsc --build -verbose tsconfig-release.json",
-    "start": "npm run build && google-chrome-stable http://localhost:8000/DApp & python3 -m http.server"
+    "build": "tsc --build -verbose tsconfig-release.json",
+    "build-release": "rm -rf Dapp/dist && npx tsc --build -verbose tsconfig-release.json",
+    "start": "npm run build && python3 test-server.py & google-chrome-stable http://localhost:8000/DApp"
   },
   "keywords": [
     "NEAR",

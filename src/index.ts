@@ -3,7 +3,7 @@ import * as d from "./util/document.js"
 import * as InitialPage from "./pages/initial.js"
 import * as Dashboard from "./pages/dashboard.js"
 
-import { wallet } from "./wallet-api/wallet.js"
+import { wallet, semver } from "./wallet-api/wallet.js"
 
 import { isValidEmail } from "./util/valid.js"
 
@@ -21,8 +21,13 @@ function walletConnected(ev:CustomEvent){
   const div = d.byId("connection-info");
   div.innerText = ev.detail.data.accountId;
   div.classList.add("connected")
-  d.showSuccess("wallet connected")
-  Dashboard.show()
+  if (wallet.version<semver(1,0,3)) {
+    d.showErr(`This test app requires Narwallets v1.0.3. Check beta-test instructions at Narwallets.com (${wallet.version})`)
+  }
+  else {
+    d.showSuccess("wallet connected")
+    Dashboard.show()
+  }
 }
 function walletDisconnected(ev:CustomEvent){
   const div = d.byId("connection-info")

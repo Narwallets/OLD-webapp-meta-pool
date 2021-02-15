@@ -3,6 +3,9 @@ import {BatchTransaction, FunctionCall, Transfer} from "./lib/batch-transaction.
 
 type EventHandler = (this:Document,ev:any)=>any;
 
+//helper to check wallet version
+export function semver(major:number,minor:number,version:number){return major*1e6+minor*1e3+version}
+
 //-----------------------------
 //-- SINGLETON WALLET class  --
 //-----------------------------
@@ -11,7 +14,8 @@ export class Wallet {
     _isConnected: boolean =false;
     _accountId: string="";
     _network="mainnet"; //default required network. Users will be required to connect accounts from mainnet
-    
+    version = 0; //0 until wallet connected
+
     get accountId():string{
         return this._accountId;
     }
@@ -31,7 +35,7 @@ export class Wallet {
         if (this._isConnected) window.postMessage({dest:"ext",code:"disconnect"},"*"); //inform the extension
         this._isConnected = false;
         this._accountId = "";
-        
+        this.version = 0
     }
 
     connectionHelp(){
