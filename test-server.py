@@ -24,6 +24,7 @@ httpd = socketserver.TCPServer(("localhost", PORT), HttpRequestHandler)
 
 try:
     print(f"serving at http://localhost:{PORT}")
+    print(os.getcwd())
     httpd.serve_forever()
 except KeyboardInterrupt:
     pass
