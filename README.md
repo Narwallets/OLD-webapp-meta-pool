@@ -23,7 +23,7 @@ This is the Web App repository. The rust Smart contract and main documentation i
 ### TO DO
 
 #### Beta test & rewards
-There are rewards!!!! check https://github.com/Narwallets/beta-test
+There are rewards!!!! check https://github.com/Narwallets/beta-testing
 
 #### Web App
  - [x] Wallet API - Chain-agnostic DApp - Connection is started from the wallet
