@@ -19,5 +19,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": false,
     "experimentalDecorators": true
-  }
+  },
+  "exclude": ["z-attic","DApp","node_modules","docs"]
 }

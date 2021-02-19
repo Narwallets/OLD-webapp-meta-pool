@@ -15,7 +15,7 @@ import {show as VLoan_show } from "./validator-loan.js"
 
 
 import type { AnyElement, ClickHandler } from "../util/document.js"
-import { isValidAmount } from "../util/valid.js"
+import { checkPositiveAmount } from "../util/valid.js"
 
 
 //-----------------
@@ -158,7 +158,7 @@ async function performDepositAndStake() {
     try {
 
         const amountToStake = d.getNumber("input#deposit-and-stake");
-        if (amountToStake < 5) throw Error("Stake at least 5 Near");
+        if (amountToStake < 5) throw Error("Buy at least 5 stNear");
 
         await metaPool.deposit_and_stake(amountToStake)
 
@@ -200,7 +200,7 @@ async function performBuyStake() {
     try {
 
         const amountToStake = d.getNumber("input#buy-stake-amount");
-        if (amountToStake < 5) throw Error("Stake at least 5 Near");
+        if (amountToStake < 5) throw Error("Buy at least 5 stNear");
 
         await metaPool.buy_stnear_stake(amountToStake)
 
@@ -241,6 +241,7 @@ async function sellOKClicked() {
     try {
         const info = cachedAccountData
         const stnearToSell = d.getNumber("input#sell-amount")
+        checkPositiveAmount(stnearToSell);
 
         let nearToReceiveU128String = await metaPool.get_near_amount_sell_stnear(stnearToSell)
         let nearToReceive = Math.trunc(c.yton(nearToReceiveU128String)*100)/100 //on the promised NEAR *TRUNCATE* to 2 decimals
@@ -328,7 +329,7 @@ async function performUnstake() {
         d.showWait()
 
         const amount = c.toNum(d.inputById("unstake-amount").value);
-        if (!isValidAmount(amount)) throw Error("Amount is not valid");
+        checkPositiveAmount(amount);
 
         await metaPool.unstake(amount)
 
@@ -380,7 +381,7 @@ async function performDeposit() {
     try {
 
         const nearsToDeposit = d.getNumber("#deposit-amount")
-        if (!isValidAmount(nearsToDeposit)) throw Error("Amount should be positive");
+        checkPositiveAmount(nearsToDeposit);
 
         okCancel.disable()
 
@@ -413,8 +414,7 @@ async function performWithdraw() {
         d.showWait()
 
         const amount = d.getNumber("#withdraw-amount")
-
-        if (!isValidAmount(amount)) throw Error("Amount should be positive");
+        checkPositiveAmount(amount);
         if (amount > cachedAccountData.available) throw Error("max amount is " + c.toStringDec(cachedAccountData.available));
 
         await metaPool.withdraw(amount)

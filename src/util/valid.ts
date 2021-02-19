@@ -28,12 +28,16 @@ export function isValidAccountID(accountId:string):boolean {
     return !last_char_is_separator;
 }
 
-export function isValidAmount(amount:number):boolean {
+export function isPositiveAmount(amount:number):boolean {
     if (isNaN(amount))
         return false;
     if (amount < 0)
         return false;
     return true;
+}
+
+export function checkPositiveAmount(amount:number){
+    if (!isPositiveAmount(amount)) throw Error("amount should be positive")
 }
 
 export function isValidEmail(email:string) :boolean {

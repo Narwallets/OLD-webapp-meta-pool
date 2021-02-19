@@ -10,7 +10,7 @@ import { metaPool, VLoanInfo } from "../contracts/meta-pool.js"
 import {show as MyAccount_show} from "./my-account.js"
 
 import type { AnyElement, ClickHandler } from "../util/document.js"
-import { isValidAmount } from "../util/valid.js"
+import { checkPositiveAmount } from "../util/valid.js"
 
 const statuses = ["DRAFT","ACTIVE","REJECTED","APPROVED","FEE_PAID","EXECUTING","COMPLETED"]
 const DRAFT=0;

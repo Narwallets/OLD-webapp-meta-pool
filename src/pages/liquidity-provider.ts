@@ -12,7 +12,7 @@ import { ExtendedAccountData } from "../data/extended-account.js"
 import {show as MyAccount_show} from "./my-account.js"
 
 import type { AnyElement, ClickHandler } from "../util/document.js"
-import { isValidAmount } from "../util/valid.js"
+import { checkPositiveAmount } from "../util/valid.js"
 
 
 //-----------------
@@ -140,6 +140,7 @@ async function performRemoveLiquidity() {
         d.showWait()
 
         const liquidityToRemove = d.getNumber("input#remove-liquidity-amount")
+        checkPositiveAmount(liquidityToRemove);
         await metaPool.nslp_remove_liquidity(liquidityToRemove)
         d.showSuccess("Success: removed " + c.toStringDec(liquidityToRemove) + " from the LP"); //"\u{24c3}")
 
