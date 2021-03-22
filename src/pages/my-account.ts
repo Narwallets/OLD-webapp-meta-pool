@@ -30,9 +30,9 @@ function init() {
     d.onClickId("sell", sellClicked);
     d.onClickId("deposit", depositClicked);
     d.onClickId("withdraw", withdrawClicked);
-    d.onClickId("stake", stakeAvailabeClicked);
+    d.onClickId("stake", stakeAvailableClicked);
     d.onClickId("start-unstake", unstakeClicked);
-    //d.onClickId("complete-unstake", completeUnstakeClicked);
+    d.onClickId("complete-unstake", performFinishUnstake);
 
     d.onClickId("refresh-account", refreshAccountClicked);
     d.onClickId("enter-ns-liquidity-provider", liquidityProviderClicked);
@@ -75,7 +75,7 @@ export async function show(reposition?: string) {
         if (reposition) {
             switch (reposition) {
                 case "stake": {
-                    stakeAvailabeClicked()
+                    stakeAvailableClicked()
                     break;
                 }
             }
@@ -179,7 +179,7 @@ async function performDepositAndStake() {
 }
 
 //----------------------
-function stakeAvailabeClicked() {
+function stakeAvailableClicked() {
     try {
 
         const acc = cachedAccountData
@@ -289,7 +289,6 @@ async function performSell() {
 }
 
 //-------------------------------------
-//TODO
 async function unstakeClicked() {
     try {
         d.showWait()
@@ -304,6 +303,7 @@ async function unstakeClicked() {
     }
 
 }
+
 
 // //-----------------------
 // function fixUserAmountInY(amount: number, yoctosMax: string): string {
@@ -349,18 +349,18 @@ async function performUnstake() {
     }
 }
 
-async function performWithdrawUnstaked() {
+async function performFinishUnstake() {
     //normal accounts
     try {
-        okCancel.disable();
+
         d.showWait()
 
         //const amount = c.toNum(d.inputById("withdraw-unstaked-amount").value);
         //if (!isValidAmount(amount)) throw Error("Amount is not valid");
 
-        const recovered_amount = await metaPool.finish_unstake()
+        const recovered_amount = await metaPool.finish_unstaking()
 
-        d.showSuccess(c.toStringDec(c.yton(recovered_amount)) + " withdrew from the pool")
+        d.showSuccess(c.toStringDec(c.yton(recovered_amount)) + " withdrew from the pool and moved to available")
 
         await refreshAccount()
 
@@ -372,7 +372,6 @@ async function performWithdrawUnstaked() {
     }
     finally {
         d.hideWait()
-        okCancel.enable();
     }
 }
 

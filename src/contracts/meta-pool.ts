@@ -28,7 +28,7 @@ export type GetAccountInfoResult = {
     unstaked_requested_epoch_height: string; //U64,
     ///if env::epoch_height()>=account.unstaked_requested_epoch_height+NUM_EPOCHS_TO_UNLOCK
     can_withdraw: boolean,
-    /// total amount the user holds in this contract: account.availabe + account.staked + current_rewards + account.unstaked
+    /// total amount the user holds in this contract: account.available + account.staked + current_rewards + account.unstaked
     total: string; //U128,
 
     //-- STATISTICAL DATA --
@@ -175,8 +175,8 @@ export class MetaPool extends SmartContract {
     }
 
     //return withdrew amount
-    finish_unstake() : Promise<string> {
-        return this.call("finnish_unstake",{})
+    finish_unstaking() : Promise<string> {
+        return this.call("finish_unstaking",{})
     }
 
     //buy stnear/stake
