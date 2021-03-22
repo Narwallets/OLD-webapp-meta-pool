@@ -31,7 +31,7 @@ export function isValidAccountID(accountId:string):boolean {
 export function isPositiveAmount(amount:number):boolean {
     if (isNaN(amount))
         return false;
-    if (amount < 0)
+    if (amount <= 0)
         return false;
     return true;
 }
