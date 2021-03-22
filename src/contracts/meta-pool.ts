@@ -175,8 +175,8 @@ export class MetaPool extends SmartContract {
     }
 
     //return withdrew amount
-    finish_unstake() : Promise<string> {
-        return this.call("finnish_unstake",{})
+    finish_unstaking() : Promise<string> {
+        return this.call("finish_unstaking",{})
     }
 
     //buy stnear/stake
