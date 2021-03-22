@@ -30,7 +30,7 @@ function init() {
     d.onClickId("sell", sellClicked);
     d.onClickId("deposit", depositClicked);
     d.onClickId("withdraw", withdrawClicked);
-    d.onClickId("stake", stakeAvailabeClicked);
+    d.onClickId("stake", stakeAvailableClicked);
     d.onClickId("start-unstake", unstakeClicked);
     //d.onClickId("complete-unstake", completeUnstakeClicked);
 
@@ -75,7 +75,7 @@ export async function show(reposition?: string) {
         if (reposition) {
             switch (reposition) {
                 case "stake": {
-                    stakeAvailabeClicked()
+                    stakeAvailableClicked()
                     break;
                 }
             }
@@ -179,7 +179,7 @@ async function performDepositAndStake() {
 }
 
 //----------------------
-function stakeAvailabeClicked() {
+function stakeAvailableClicked() {
     try {
 
         const acc = cachedAccountData
